@@ -20,20 +20,20 @@
                 "group": "Hazırlık",
                 "expanded": false,
                 "pages": [
-                  "quickstart",
-                  "sandbox",
-                  "authentication",
-                  "postman-collections",
-                  "live-vs-sandbox",
-                  "limits"
+                  "/quickstart/quickstart",
+                  "/quickstart/sandbox",
+                  "/quickstart/postman-collections",
+                  "/quickstart/authentication",
+                  "/quickstart/live-vs-sandbox",
+                  "/quickstart/limits"
                 ]
-              },
-              "development"
+              }
             ]
           },
           {
-            "group": "Ödeme Ürünleri",
+            "group": "Entegrasyon",
             "pages": [
+               "Integration/development",
               "essentials/settings",
               "essentials/navigation"
             ]
