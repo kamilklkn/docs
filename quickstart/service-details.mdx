@@ -1,0 +1,233 @@
+---
+title: "Servis Detayları"
+---
+1000pay API’leri, tekrarlanan taleplerde tutarlı ve güvenli bir işlem davranışı sağlamak üzere, kimlik doğrulama ve imza üretimi merkezli bir mimariyle tasarlanmıştır. Üye işyerlerinin gerçekleştirdiği tüm API çağrıları, talebin kaynağını ve bütünlüğünü doğrulamak amacıyla belirli parametrelerin birlikte kullanılmasını gerektirir.
+
+Bu kapsamda; Public/Private Key, nonce, signature, conversationId, merchantNumber ve clientIpAddress gibi alanlar, hem güvenlik hem de izlenebilirlik açısından kritik rol oynar. Aşağıdaki bölümlerde, bu parametrelerin her biri ile 1000pay ödeme servislerinin REST tabanlı mimarisi detaylı şekilde açıklanmaktadır.
+
+
+## Kimlik doğrulama
+
+Bir üye işyerine ait hesapla gerçekleştirilen tüm API çağrıları kimlik doğrulama gerektirir. Bir isteğin geçerli kabul edilebilmesi için aşağıdaki parametrelerin eksiksiz olarak iletilmesi zorunludur:
+	
+  | Parametre Adı | Parametre Değeri                           |
+| -------- | ------------------------------------- |
+| publicKey     | YOUR_PUBLIC_KEY                 |
+| nonce      | YOUR_PRIVATE_KEY                      |
+| signature   | xxxxxxxxxxx |
+| conversationId   | xxxxxxxxxxx |
+| merchantNumber   | xxxxxxxxxxx |
+| clientIpAddress   | xxxxxxxxxxx |
+  
+
+## Public / Private Key
+Üye işyeriniz sisteme tanımlandıktan sonra, entegrasyonlarda kullanılmak üzere size bir Public Key ve bir Private Key verilir.
+	- **Public Key**, API çağrılarında kimliğinizi tanımlamak için kullanılır.
+	- **Private Key**, yalnızca size özeldir ve güvenlik nedeniyle hiçbir koşulda paylaşılmamalıdır.
+
+1000pay tarafından sunulan hiçbir API, Private Key bilgisini açık şekilde talep etmez. Bu anahtar yalnızca imza (signature) üretiminde kullanılmalıdır.
+
+
+
+
+## Nonce
+Nonce, her API isteği için üye işyeri tarafından üretilen sayısal bir değerdir ve genellikle milisaniye cinsinden zaman damgasını temsil eder.
+
+Bu değer, aynı isteğin tekrar gönderilmesini önlemek ve işlem güvenliğini artırmak amacıyla kullanılır.
+
+
+
+## Signature
+Signature, API isteğinin güvenliğini sağlamak için kullanılan HMAC-SHA256 algoritmasıyla üretilen bir imza değeridir.
+
+Bu değer; nonce (zaman damgası), API anahtarları ve işleme ait bazı bilgilerin kullanılmasıyla iki aşamalı hashleme süreci sonucunda oluşturulur. Signature üretimine ait örnek kod, Şekil 5.1’de gösterilmektedir.
+
+
+<CodeGroup>
+  ```java C# (.NET)  lines theme={null}
+  using System;
+using System.Security.Cryptography;
+using System.Text;
+
+public class SignatureUtil
+{
+    public static string GenerateSignature(
+        string publicKey,
+        string privateKeyBase64,
+        string conversationId,
+        long nonce
+    )
+    {
+        var message = $"{publicKey}{nonce}";
+        var securityData = Generate(message, privateKeyBase64);
+
+        var secondMessage = $"{privateKeyBase64}{conversationId}{nonce}{securityData}";
+        return Generate(secondMessage, privateKeyBase64);
+    }
+
+    private static string Generate(string message, string key)
+    {
+        using var hmac = new HMACSHA256(Convert.FromBase64String(key));
+        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
+        return Convert.ToBase64String(hash);
+    }
+}
+  ```
+
+ ```java Javascript   lines theme={null}
+  const publicKey = pm.collectionVariables.get("publicKey");
+const privateKeyBase64 = pm.collectionVariables.get("privateKey");
+
+if (!publicKey || !privateKeyBase64) {
+    throw new Error("publicKey veya privateKey tanımlı değil");
+}
+
+const nonce = Date.now().toString();
+const conversationId = Math.floor(Math.random() * 1e9).toString();
+
+const key = CryptoJS.enc.Base64.parse(privateKeyBase64);
+
+// 1. Seviye
+const securityData = CryptoJS.HmacSHA256(
+    publicKey + nonce,
+    key
+);
+const securityDataBase64 = CryptoJS.enc.Base64.stringify(securityData);
+
+// 2. Seviye
+const signature = CryptoJS.HmacSHA256(
+    privateKeyBase64 + conversationId + nonce + securityDataBase64,
+    key
+);
+const signatureBase64 = CryptoJS.enc.Base64.stringify(signature);
+
+// Set
+pm.collectionVariables.set("nonce", nonce);
+pm.collectionVariables.set("conversationId", conversationId);
+pm.collectionVariables.set("signature", signatureBase64);
+  ```
+
+   ```java Node.js  lines theme={null}
+const crypto = require("crypto");
+
+function generateSignature(publicKey, privateKeyBase64, conversationId, nonce) {
+    const key = Buffer.from(privateKeyBase64, "base64");
+
+    const securityData = crypto
+        .createHmac("sha256", key)
+        .update(publicKey + nonce)
+        .digest("base64");
+
+    const signature = crypto
+        .createHmac("sha256", key)
+        .update(privateKeyBase64 + conversationId + nonce + securityData)
+        .digest("base64");
+
+    return signature;
+}
+
+// Usage
+const nonce = Date.now().toString();
+const conversationId = Math.floor(Math.random() * 1e9).toString();
+  ```
+
+
+  ```PHP PHP  lines theme={null}
+function generateSignature($publicKey, $privateKeyBase64, $conversationId, $nonce)
+{
+    $key = base64_decode($privateKeyBase64);
+
+    $securityData = base64_encode(
+        hash_hmac('sha256', $publicKey . $nonce, $key, true)
+    );
+
+    $signature = base64_encode(
+        hash_hmac(
+            'sha256',
+            $privateKeyBase64 . $conversationId . $nonce . $securityData,
+            $key,
+            true
+        )
+    );
+
+    return $signature;
+}
+
+// Usage
+$nonce = round(microtime(true) * 1000);
+$conversationId = random_int(1, 1000000000);
+  ```
+
+  ```Python Python  lines theme={null}
+import hmac
+import hashlib
+import base64
+import time
+import random
+
+def generate_signature(public_key, private_key_base64, conversation_id, nonce):
+    key = base64.b64decode(private_key_base64)
+
+    message = f"{public_key}{nonce}"
+    security_data = base64.b64encode(
+        hmac.new(key, message.encode("utf-8"), hashlib.sha256).digest()
+    ).decode()
+
+    second_message = f"{private_key_base64}{conversation_id}{nonce}{security_data}"
+    signature = base64.b64encode(
+        hmac.new(key, second_message.encode("utf-8"), hashlib.sha256).digest()
+    ).decode()
+
+    return signature
+
+# Usage
+nonce = int(time.time() * 1000)
+conversation_id = random.randint(1, 1_000_000_000)
+  ```
+</CodeGroup>
+
+<Tip>
+
+**Signature üretimi iki aşamalı bir süreçtir:**
+
+İlk aşamada, Public Key ile nonce değeri birleştirilir ve ortaya çıkan mesaj, üye işyerine ait Private Key kullanılarak hashlenir. Bu işlem sonucunda 1. seviye güvenlik verisi elde edilir.
+
+İkinci aşamada ise; Private Key, conversationId, nonce ve 1. seviye güvenlik verisi bir araya getirilir. Bu değer tekrar Private Key ile hashlenerek nihai signature oluşturulur.
+
+Oluşturulan signature ve ilgili diğer kimlik doğrulama parametreleri, tüm API isteklerinde header alanında gönderilmelidir. Sunucu, bu bilgileri kullanarak isteğin doğruluğunu ve kaynağını kontrol eder ve doğrulama başarılıysa isteği işleme alır. Header yapısına ait örnek Şekil 5.2’de gösterilmektedir.
+
+
+</Tip>
+
+<img
+  style={{ borderRadius: '0.5rem' }}
+  alt="Sandbox API Anahtarları"
+  src="/images/service-header-param.png"
+/>
+
+
+
+
+## ConversationId
+ConversationId, üye işyerinin API isteği sırasında gönderdiği ve aynı şekilde yanıt içinde geri alabildiği bir referans değeridir.
+
+İstek ve yanıtların birbiriyle eşleştirilmesini sağlar. En yaygın kullanım senaryosu, bu alanın üye işyerine ait sipariş numarası olarak kullanılmasıdır.
+
+
+
+## Merchant Number
+Merchant Number, üye işyerinin 1000pay sistemine tanımlanmasının ardından kendisine verilen benzersiz tanımlayıcı numarayı ifade eder.
+
+API çağrılarında, işlemin hangi üye işyerine ait olduğunu belirtmek amacıyla kullanılır.
+
+
+##  ClientIpAddress
+ClientIpAddress, üye işyerinin müşterisine ait IP adresini ifade eder. Bu bilgi, işlem güvenliği, risk analizi ve loglama amaçlarıyla API çağrılarında iletilir.
+
+
+##  Ödeme Servisleri
+1000Pay Ödeme servisleri; tüm yazılımlara entegre olarak çalışabilecek bir mimaride, REST servisler şeklinde implemente edilmiştir. PF servislerimizin Open API dokümantasyonuna aşağıdaki adresten ulaşılabilir.
+
+[1000pay Test Swagger:](https://testpf-api.1000pay.com/swagger/index.html) 
+
+ 

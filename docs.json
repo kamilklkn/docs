@@ -23,8 +23,9 @@
                   "/quickstart/quickstart",
                   "/quickstart/sandbox",
                   "/quickstart/postman-collections",
-                  "/quickstart/authentication",
                   "/quickstart/live-vs-sandbox",
+                  "/quickstart/service-details",
+                  "/quickstart/authentication",
                   "/quickstart/limits"
                 ]
               }
