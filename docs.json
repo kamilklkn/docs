@@ -27,17 +27,26 @@
                   "/quickstart/sandbox",
                   "/quickstart/postman-collections",
                   "/quickstart/live-vs-sandbox",
-                  "/quickstart/service-details",
-                  "/quickstart/authentication",
-                  "/quickstart/limits"
+                  "/quickstart/service-details"
                 ]
               }
             ]
           },
           {
             "group": "Entegrasyon",
-            "pages": [
-               "Integration/development",
+             "pages": [
+               "Integration/tokens",
+               "Integration/provision",{
+                "group": "3D Secure Ödeme Süreci",
+                "expanded": false,
+                "pages": [
+                  "/Integration/provision3d",
+                  "/Integration/inquire",
+                  "/Integration/postman-collections",
+                  "/Integration/live-vs-sandbox",
+                  "/Integration/service-details"
+                ]
+              },
               "essentials/settings",
               "essentials/navigation"
             ]
@@ -67,13 +76,18 @@
           {
             "group": "API Belgeleme",
             "pages": [
-              "api-reference/introduction"
+              "api-reference/introduction",
+              "api-reference/quickstart",
+               "api-reference/sandbox",
+               "api-reference/postman-collections",
+                "api-reference/live-vs-sandbox",
+                 "api-reference/service-details"
             ]
           },
           {
             "group": "Endpoint examples",
             "pages": [
-              "api-reference/endpoint/get",
+              "api-reference/endpoint/get-token",
               "api-reference/endpoint/create",
               "api-reference/endpoint/delete",
               "api-reference/endpoint/webhook"

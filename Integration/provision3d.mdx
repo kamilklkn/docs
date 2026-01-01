@@ -1,0 +1,292 @@
+---
+title: '3D Secure Ödeme Süreci'
+description: 'Kart Token Servisi, kart bilgilerini güvenli şekilde tokena dönüştürerek ödeme işlemlerinde kullanılmasını sağlar.'
+---
+
+3D Secure ödeme sürecinde, backend tarafından GetThreeDSession servisi çağrılarak bir threeDSessionId oluşturulur. Bu değer client tarafa iletilir ve kullanıcı, banka 3D doğrulama sayfasına browser üzerinden yönlendirilir.
+
+Bu yapı sayesinde 3D Secure doğrulama süreci kullanıcı tarafında ilerlerken, backend sistem işlem durumunu sessionId üzerinden takip edebilir.
+
+#### GetThreeDSession
+
+3D Secure ile provizyon işlemi başlatılmadan önce, işlem 3D Secure doğrulama yöntemiyle gerçekleştirilecekse cardToken oluşturulduktan sonra bu servis çağrılarak bir sessionId üretilmelidir.
+
+Bu servis application/json içerik tipi ile çalışır ve girdi parametreleri Tablo 5.9’da detaylandırılmıştır.
+
+
+**İstek Tipi:** application/json  
+
+**GetThreeDSession Servisi Girdi Parametreleri**
+
+| Parametre Adı                   | Veri Tipi | Açıklama                                                     | Zorunluluk |
+|---------------------------------|----------|--------------------------------------------------------------|------------|
+| amount                          | number   | İşlem tutarı                                                 | Evet       |
+| pointAmount                     | number   | İşlemde kullanılacak puan tutarı                            | Hayır      |
+| cardToken                       | string   | Oluşturulan token bilgisi                                    | Evet       |
+| currency                        | string   | İşleme ait para birimi (default: TRY)                       | Evet       |
+| paymentType                     | string   | İşlem tipi (Auth / preAuth / postAuth)                      | Evet       |
+| installmentCount                | integer  | İşleme ait taksit değeri                                    | Hayır      |
+| languageCode                    | string   | Cevabın alınacağı dil bilgisi (default: TR)                 | Hayır      |
+| merchantCustomerEmail           | string   | Üye iş yeri müşterisinin email bilgisi                      | Hayır      |
+| merchantCustomerIdentityNumber  | string   | Üye iş yeri müşterisinin kimlik bilgisi                     | Hayır      |
+| merchantCustomerIp              | string   | Üye iş yeri müşterisinin IP bilgisi                         | Hayır      |
+| merchantCustomerPhoneCode       | string   | Üye iş yeri müşterisinin telefon kodu                       | Hayır      |
+| merchantCustomerPhoneNumber     | string   | Üye iş yeri müşterisinin telefon numarası                   | Hayır      |
+| callbackUrl                     | string   | Bankanın döndüğü URL bilgisi                                | Hayır      |
+| successUrl                      | string   | Bankanın başarılı işlem için döndüğü URL bilgisi            | Hayır      |
+| failUrl                         | string   | Bankanın hatalı durumlar için döndüğü URL bilgisi           | Hayır      |
+
+
+
+### GetThreeDSession Servisi Örnek Request
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "amount": 30,
+    "pointAmount": 0,
+    "cardToken": "{{cardToken}}",
+    "currency": "TRY",
+    "paymentType": "Auth",
+    "installmentCount": 0,
+    "languageCode": "TR",
+    "merchantCustomerEmail": "test@example.com",
+    "merchantCustomerIdentityNumber": "12345678922",
+    "merchantCustomerIp": "1.11.111",
+    "merchantCustomerPhoneCode": "90",
+    "merchantCustomerPhoneNumber": "5308886699",
+    "callbackUrl": "callbacktest.com",
+    "successUrl": "successtest.com",
+    "failUrl": "failtest.com"
+  }
+```
+</CodeGroup>
+
+
+
+
+### GetThreeDSession Servisi Çıktı Parametreleri**
+
+| Parametre Adı        | Veri Tipi               | Açıklama                                                     | Zorunluluk |
+|---------------------|-------------------------|--------------------------------------------------------------|------------|
+| threeDSessionId     | string                  | 3D Secure işlem sürecini başlatmak için gerekli değer        | Evet       |
+| conversationId      | string                  | Üye iş yeri benzersiz değeri                                 | Evet       |
+| isSucceeded         | boolean (true/false)    | İşlem durumu                                                 | Evet       |
+| errorCode           | string                  | Hata kodu                                                    | Evet       |
+| errorMessage        | string                  | Hata mesajı                                                  | Evet       |
+| extraParameters     | array[object]           | Ek parametre alanı                                           | Hayır      |
+| acquirerBankCode    | string                  | Ödeme bankası bilgisi                                        | Hayır      |
+| issuerBankCode      | string                  | Kart bankası bilgisi                                         | Hayır      |
+| reconciliationDate  | date                    | İşlemin tamamlanma tarihi                                    | Hayır      |
+
+
+### GetThreeDSession Servisi Örnek Response
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "threeDSessionId": "e90c0510-3b26-4d15-b5bd-2f7ffc188c9b",
+    "extraParameters": null,
+    "acquirerBankCode": "12",
+    "issuerBankCode": null,
+    "reconciliationDate": "20251205165939280",
+    "isSucceeded": true,
+    "errorCode": "",
+    "errorMessage": "",
+    "responseHeader": {
+      "conversationId": "1094389093",
+      "responseDateTime": "20251205165939314",
+      "responseCode": "0",
+      "responseDescription": "Success",
+      "transactionId": "00000000-0000-0000-0000-000000000000",
+      "requestId": "cddb9f1a-62e9-44c0-95b4-55488c223138",
+      "processingTime": 901,
+      "apiVersion": null
+    }
+  }
+```
+</CodeGroup>
+
+
+### GetThreeDSessionResult
+GetThreeDSessionResult, 3D Secure doğrulama sürecinin sonucunu sorgulamak için kullanılır.
+
+Doğrulamanın başarılı olduğu (isSucceed = true ve currentStep = VerificationFinished) tespit edildikten sonra, oluşturulan sessionId provizyon isteğine eklenerek ödeme servisi çağrılır.
+
+Bu servis application/json içerik tipi ile çalışır ve girdi parametreleri Tablo 5.13’te belirtilmiştir.
+
+**İstek Tipi:** application/json  
+
+**GetThreeDSessionResult Servisi Girdi Parametreleri**
+
+| Parametre Adı                  | Veri Tipi | Açıklama                                                     | Zorunluluk |
+|--------------------------------|----------|--------------------------------------------------------------|------------|
+| threeDSessionId               | string   | 3D Secure işlem sürecini başlatmak için gerekli değer        | Evet       |
+| languageCode                  | string   | Cevabın alınacağı dil bilgisi (default: TR)                 | Hayır      |
+| merchantCustomerEmail         | string   | Üye iş yeri müşteri email bilgisi                            | Hayır      |
+| merchantCustomerIdentityNumber| string   | Üye iş yeri müşteri kimlik bilgisi                           | Hayır      |
+| merchantCustomerIp            | string   | Üye iş yeri müşteri IP bilgisi                               | Hayır      |
+| merchantCustomerPhoneCode     | string   | Üye iş yeri müşteri telefon kodu bilgisi                    | Hayır      |
+| merchantCustomerPhoneNumber   | string   | Üye iş yeri müşteri telefon numarası bilgisi                | Hayır      |
+
+
+
+### GetThreeDSessionResult Servisi Örnek Request
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "threeDSessionId": "{{threeDSessionId}}",
+    "languageCode": "TR",
+    "merchantCustomerEmail": "customer@gmail.com",
+    "merchantCustomerIdentityNumber": "20558899666",
+    "merchantCustomerIp": "123.123.11.11",
+    "merchantCustomerPhoneCode": "90",
+    "merchantCustomerPhoneNumber": "5306689955"
+  }
+```
+</CodeGroup>
+
+### Tablo 5.15. GetThreeDSessionResult Servisi Çıktı Parametreleri
+
+| Parametre Adı              | Veri Tipi               | Açıklama                                                     | Zorunluluk |
+|----------------------------|-------------------------|--------------------------------------------------------------|------------|
+| conversationId             | string                  | Üye iş yeri benzersiz değeri                                 | Evet       |
+| isSucceeded                | boolean (true/false)    | İşlem durumu                                                 | Evet       |
+| errorCode                  | string                  | Hata kodu                                                    | Evet       |
+| errorMessage               | string                  | Hata mesajı                                                  | Evet       |
+| currentStep                | string                  | 3D doğrulama işleminin adımı (0, 1, 2, 3)                    | Hayır      |
+| mdStatus                   | string                  | 3D doğrulama sonucunda bankadan dönen değer (0–9)           | Hayır      |
+| mdErrorMessage             | string                  | 3D doğrulama sonucunda bankadan dönen hata mesajı           | Hayır      |
+| halfSecure                 | boolean (true/false)    | İşlemin half secure gerçekleşme bilgisi                     | Hayır      |
+| approvalCode               | string                  | Bankadan dönen onay kodu bilgisi                             | Hayır      |
+| threeDResult               | string                  | True ise 0, false ise 1                                      | Hayır      |
+| threeDResultDescription    | string                  | 3D işlem sonucunun açıklaması                                | Hayır      |
+
+
+### ablo 5.16. GetThreeDSessionResult Servisi Örnek Response
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "currentStep": "SessionIdRequested",
+    "mdStatus": null,
+    "mdErrorMessage": null,
+    "halfSecure": false,
+    "approvalCode": "",
+    "threeDResult": "0",
+    "threeDResultDescription": "3D Doğrulama başarılı.",
+    "isSucceeded": true,
+    "errorCode": null,
+    "errorMessage": null,
+    "responseHeader": {
+      "conversationId": "1094389093",
+      "responseDateTime": "20251205170013633",
+      "responseCode": "0",
+      "responseDescription": "Success",
+      "transactionId": "00000000-0000-0000-0000-000000000000",
+      "requestId": "d32a1e94-e29a-43da-85b3-3c3f8e54a8b0",
+      "processingTime": 172,
+      "apiVersion": null
+    }
+  }
+```
+</CodeGroup>
+
+
+### Tablo 5.17. mdStatus Açıklamaları
+
+| mdStatus Değeri | Açıklama                                   |
+|-----------------|---------------------------------------------|
+| 1               | Doğrulanmış işlem (Full 3D)                 |
+| 2, 3, 4         | Kart kayıtlı değil (Half 3D)                |
+| 5, 6, 7, 8, 9   | Geçerli doğrulama yok veya sistem hatası    |
+| 0               | Doğrulama başarısız                         |
+
+
+
+
+### Tablo 5.18. currentStep Açıklamaları
+
+| currentStep            | Açıklama                                                                 |
+|------------------------|--------------------------------------------------------------------------|
+| SessionIdRequested     | threeDSessionId üretilmesinin ardından oluşan statüdür.                  |
+| VerificationStarted    | init3ds servisi çağrıldıktan sonra doğrulama işleminin başlatıldığını ifade eder. |
+| VerificationFinished   | Doğrulama işleminin tamamlandığını ifade eder.                            |
+| ProvisionCompleted     | Doğrulama sonrası provizyon servisinin çağrılmasıyla ödemenin tamamlandığını ifade eder. |
+
+
+
+### Init3ds
+Init3ds, 3D Secure doğrulama sürecini başlatmak için kullanılan servistir ve HTTP Form POST yöntemiyle çalışır.
+
+Bu serviste, kimlik doğrulama bilgileri diğer servislerden farklı olarak header yerine form-data formatında gönderilmelidir.
+
+
+** İstek Tipi:** multipart/form-data
+
+### Tablo 5.19. init3ds Servisi Girdi Parametreleri
+
+| Parametre Adı     | Veri Tipi | Açıklama                                              | Zorunluluk |
+|-------------------|----------|-------------------------------------------------------|------------|
+| threeDSessionId   | string   | 3D Secure işlem sürecini başlatmak için gerekli değer | Evet       |
+| callbackUrl       | string   | 3D doğrulama işleminin sonuçlandığı URL bilgisi       | Evet       |
+| languageCode      | string   | Cevabın alınacağı dil bilgisi (default: TR)           | Hayır      |
+| clientIpAddress   | string   | Üye iş yeri IP adresi                                 | Evet       |
+| publicKey         | string   | Üye iş yeri açık anahtarı                             | Evet       |
+| nonce             | string   | Zaman damgası                                        | Evet       |
+| signature         | string   | Kimlik anahtar değeri                                 | Evet       |
+| conversationId    | string   | Üye iş yeri benzersiz değeri                          | Evet       |
+| merchantNumber    | string   | Üye iş yeri numarası                                  | Evet       |
+
+
+
+### Tablo 5.20. Init3ds Servisi Örnek Request (form-data)
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  ```text form-data theme="dracula"
+  ThreeDSessionId={{threeDSessionId}}
+  CallbackUrl=https://www.google.com
+  LanguageCode=TR
+  ClientIpAddress=192.1.1.1
+  PublicKey={{publicKey}}
+  Nonce={{nonce}}
+  Signature={{signature}}
+  ConversationId={{conversationId}}
+  MerchantNumber={{merchantNumber}}
+```
+</CodeGroup>
+
+**Tablo 5.21. Init3ds Servisi Çıktı Parametreleri**
+
+| Parametre Adı   | Veri Tipi               | Açıklama                                                                 | Zorunluluk |
+|-----------------|-------------------------|--------------------------------------------------------------------------|------------|
+| conversationId  | string                  | Üye iş yeri benzersiz değeri                                             | Evet       |
+| isSucceeded     | boolean (true/false)    | İşlem durumu                                                             | Evet       |
+| errorCode       | string                  | Hata kodu                                                                | Evet       |
+| errorMessage    | string                  | Hata mesajı                                                              | Evet       |
+| htmlContent     | string                  | Kullanıcının kart bankasının 3D sayfasına yönlendirilmesi için kullanılacak HTML | Evet       |
+
+
+### Tablo 5.22. Init3ds Servisi Örnek Response
+<CodeGroup dropdown>
+  ```json theme="dracula"
+{
+  "isSucceed": true,
+  "errorCode": "string",
+  "errorMessage": "string",
+  "responseHeader": {
+    "conversationId": "string",
+    "responseDateTime": "string",
+    "responseCode": "string",
+    "responseDescription": "string",
+    "transactionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    "requestId": "string",
+    "processingTime": 0,
+    "apiVersion": "string"
+  },
+  "htmlContent": "string"
+}
+```
+</CodeGroup>

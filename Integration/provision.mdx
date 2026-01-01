@@ -1,0 +1,288 @@
+---
+title: 'Ödeme Servisi (Provision)'
+description: 'Ödeme Servisi, kart token kullanarak non-secure ve 3D Secure ödeme işlemlerinin gerçekleştirilmesini sağlar.'
+---
+Ödeme Servisi, daha önce oluşturulan kart token bilgisi kullanılarak non-secure ve 3D Secure provizyon işlemlerinin gerçekleştirilmesini sağlar.
+
+3D Secure işlem yapılmak istendiğinde, doğrulaması tamamlanmış kartlardan tutar çekilebilmesi için threeDSessionId parametresi set edilerek bu servis çağrılır.
+
+
+**İstek Tipi:** application/json  
+
+**Tablo 5.5. Ödeme Servisi Girdi Parametreleri**
+
+| Parametre Adı                    | Veri Tipi        | Açıklama                                                     | Zorunluluk |
+|----------------------------------|------------------|--------------------------------------------------------------|------------|
+| amount                           | number           | İşlem tutarı                                                 | Evet       |
+| pointAmount                      | number           | İşlemde kullanılacak puan tutarı                            | Hayır      |
+| cardToken                        | string           | Oluşturulan token bilgisi                                    | Evet       |
+| currency                         | string           | İşleme ait para birimi (default: TRY)                       | Evet       |
+| paymentType                      | string           | İşlem tipi (Auth / preAuth / postAuth)                      | Evet       |
+| integrationMode                  | string           | Entegrasyon modeli bilgisi                                  | Hayır      |
+| installmentCount                 | integer          | İşleme ait taksit değeri                                    | Hayır      |
+| threeDSessionId                  | string           | 3D Secure işlem için oluşturulan değer                      | Hayır      |
+| originalOrderId                  | string           | Orijinal işleme ait sipariş numarası (postAuth gerekli)     | Hayır      |
+| languageCode                     | string           | Cevabın alınacağı dil bilgisi (default: TR)                 | Hayır      |
+| merchantCustomerName             | string           | Üye iş yeri müşterisinin adı                                | Hayır      |
+| merchantCustomerPhoneCode        | string           | Üye iş yeri müşterisinin telefon kodu                       | Hayır      |
+| merchantCustomerPhoneNumber      | string           | Üye iş yeri müşterisinin telefonu                           | Hayır      |
+| description                      | string           | Açıklama                                                    | Hayır      |
+| cardHolderName                   | string           | Kart sahibi adı                                             | Hayır      |
+| gateway                          | string           | Gateway bilgisi                                             | Hayır      |
+| isOnUsPayment                    | bool             | On-us ödemelerinde kullanılan parametre                    | Hayır      |
+| callbackUrl                      | string           | Bankanın döndüğü URL adresi bilgisi                         | Hayır      |
+| merchantCustomerEmail            | string           | Üye iş yeri müşterisinin email bilgisi                      | Hayır      |
+| merchantCustomerIdentityNumber   | string           | Üye iş yeri müşterisinin kimlik bilgisi                     | Hayır      |
+| merchantCustomerIp               | string           | Üye iş yeri müşterisinin IP bilgisi                         | Hayır      |
+| merchantCustomerCity             | string           | Üye iş yeri müşterisinin şehir bilgisi                      | Hayır      |
+| merchantCustomerCountry          | string           | Üye iş yeri müşterisinin ülke bilgisi                       | Hayır      |
+| extraParameters                  | array[object]    | Ek parametre alanı                                          | Hayır      |
+| paymentChannel                   | string / bool    | Ödeme kanalı bilgisi                                        | Hayır      |
+| paymentSource                    | string           | Ödeme kaynağı bilgisi                                       | Hayır      |
+
+####  Ödeme Servisi Örnek Request
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "amount": 5,
+    "pointAmount": 0,
+    "cardToken": "{{cardToken}}",
+    "currency": "TRY",
+    "paymentType": "Auth",
+    "integrationMode": "API",
+    "installmentCount": 0,
+    "threeDSessionId": "",
+    "originalOrderId": "",
+    "languageCode": "TR",
+    "description": "",
+    "gateway": "",
+    "callbackUrl": "string",
+    "cardHolderName": "Kart Sahibi",
+    "merchantCustomerName": "Ahmet Yılmaz",
+    "isOnUsPayment": false,
+    "merchantCustomerPhoneCode": "+90",
+    "merchantCustomerPhoneNumber": "5307988566",
+    "merchantCustomerEmail": "deneme",
+    "merchantCustomerIdentityNumber": "99999999999",
+    "merchantCustomerIp": "21.123.11.12",
+    "merchantCustomerCity": "Adana",
+    "merchantCustomerCountry": "Türkiye",
+    "paymentChannel": "CC",
+    "paymentSource": "web",
+    "extraParameters": {
+      "MerchantExtraParameter1": "test@example.com",
+      "MerchantCustomerIdentityNumber": "12345678901",
+      "MerchantCustomerIp": "192.168.1.1",
+      "SomeField": "SomeValue"
+    }
+  }
+```
+</CodeGroup>
+
+### Ödeme Servisi Çıktı Parametreleri
+
+| Parametre Adı        | Veri Tipi               | Açıklama                              | Zorunluluk |
+|---------------------|-------------------------|----------------------------------------|------------|
+| orderId             | string                  | İşlem cevabında verilen sipariş numarası | Evet       |
+| conversationId      | string                  | Üye iş yeri benzersiz değeri           | Evet       |
+| isSucceeded         | boolean (true/false)    | İşlem durumu                           | Evet       |
+| errorCode            | string                  | Hata kodu                              | Evet       |
+| errorMessage         | string                  | Hata mesajı                            | Evet       |
+| provisionNumber     | string                  | Provizyon kodu                         | Evet       |
+| description         | string                  | Açıklama                               | Hayır      |
+| extraParameters     | array[object]           | Ek parametre alanı                     | Hayır      |
+| acquirerBankCode    | string                  | Ödeme bankası bilgisi                  | Hayır      |
+| issuerBankCode      | string                  | Kart bankası                           | Hayır      |
+| approvalCode        | string                  | Banka onay kodu                        | Hayır      |
+| reconciliationDate  | date                    | İşlemin tamamlandığı tarih             | Hayır      |
+| isThreeD            | bool                    | İşlemin 3D bilgisi                     | Hayır      |
+| maskedCardNumber    | string                  | Maskeli kart numarası                  | Hayır      |
+| cardBrand           | string                  | Kart markası                           | Hayır      |
+| finalAmount         | number                  | İşlem tutarı                           | Hayır      |
+| feeAmount           | number                  | İşlemin komisyon tutarı                | Hayır      |
+| netAmount           | number                  | Net tutar                              | Hayır      |
+
+
+
+### Ödeme Servisi Örnek Response
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "orderId": "12110000000019498253",
+    "provisionNumber": "156605",
+    "description": null,
+    "extraParameters": {
+      "MerchantExtraParameter1": "test@example.com",
+      "MerchantCustomerIdentityNumber": "12345678901",
+      "MerchantCustomerIp": "192.168.1.1",
+      "SomeField": "SomeValue"
+    },
+    "acquirerBankCode": "12",
+    "issuerBankCode": "0",
+    "approvalCode": null,
+    "reconciliationDate": "20251205165616793",
+    "isThreeD": false,
+    "maskedCardNumber": "979210******0001",
+    "cardBrand": null,
+    "finalAmount": 5.0,
+    "feeAmount": 0.15,
+    "netAmount": 4.85,
+    "isSucceed": true,
+    "errorCode": null,
+    "errorMessage": null,
+    "responseHeader": {
+      "conversationId": "2006891309",
+      "responseDateTime": "20251205165616937",
+      "responseCode": "00",
+      "responseDescription": "00",
+      "transactionId": "e90c0510-380d-4719-bff2-7cce4382859f",
+      "requestId": "1111111111111",
+      "processingTime": 3895,
+      "apiVersion": "1.0.1"
+    }
+  }
+```
+</CodeGroup>
+
+
+
+> Creates a new agent job that can generate and edit documentation based on provided messages and branch information.
+
+This endpoint creates an agent job based on provided messages and branch information. The job executes asynchronously and returns a streaming response with the execution details and results.
+
+If a branch doesn't exist, the agent creates one. If files are edited successfully, a pull request is automatically created at the end of the job.
+
+## Rate limits
+
+The agent API has the following limits:
+
+* 100 uses per Mintlify project per hour
+
+## Suggested usage
+
+For best results, use the [useChat hook from ai-sdk](https://ai-sdk.dev/docs/reference/ai-sdk-ui/use-chat#usechat) to send requests and handle responses.
+
+
+## OpenAPI
+
+````yaml admin-openapi.json post /agent/{projectId}/job
+openapi: 3.0.1
+info:
+  title: Mintlify Admin API
+  description: >-
+    An API for administrative operations including documentation updates and
+    agent management.
+  version: 1.0.0
+servers:
+  - url: https://api.mintlify.com/v1
+security:
+  - bearerAuth: []
+paths:
+  /agent/{projectId}/job:
+    post:
+      summary: Create agent job
+      description: >-
+        Creates a new agent job that can generate and edit documentation based
+        on provided messages and branch information.
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: >-
+            Your project ID. Can be copied from the [API
+            keys](https://dashboard.mintlify.com/settings/organization/api-keys)
+            page in your dashboard.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - branch
+                - messages
+              properties:
+                branch:
+                  type: string
+                  description: >-
+                    The name of the Git branch that the agent should work on,
+                    will be automatically created if it doesn't exist
+                messages:
+                  type: array
+                  description: >-
+                    A list of messages to provide to the agent. A default system
+                    prompt is always prepended automatically, so you typically
+                    only need to include user messages.
+                  items:
+                    type: object
+                    required:
+                      - role
+                      - content
+                    properties:
+                      role:
+                        type: string
+                        enum:
+                          - system
+                          - user
+                        description: >-
+                          The role of the message sender. Use `user` for task
+                          instructions. Use `system` to add supplementary
+                          instructions that are appended after the default
+                          system prompt (does not replace it).
+                      content:
+                        type: string
+                        description: The content of the message.
+                asDraft:
+                  type: boolean
+                  default: true
+                  description: >-
+                    Control whether the pull request is created in draft or
+                    non-draft mode. When true, creates a draft pull request.
+                    When false, creates a regular (non-draft) pull request ready
+                    for review.
+                model:
+                  type: string
+                  enum:
+                    - sonnet
+                    - opus
+                  default: sonnet
+                  description: >-
+                    The AI model to use for the agent job. Use `sonnet` for
+                    faster, cost-effective processing. Use `opus` for more
+                    capable, but slower processing.
+      responses:
+        '200':
+          description: >-
+            Agent job created successfully (streaming response). X-Session-Id
+            Header is sent back in the response
+          headers:
+            X-Message-Id:
+              schema:
+                type: string
+              description: Message identifier for the created job
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: >-
+                  Streaming response containing the agent job execution details
+                  and results.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: >-
+        The Authorization header expects a Bearer token. Create an [Admin API
+        Key](https://dashboard.mintlify.com/settings/organization/api-keys)
+        here.
+
+````
+
+---
+
+> To find navigation and other pages in this documentation, fetch the llms.txt file at: https://mintlify.com/docs/llms.txt

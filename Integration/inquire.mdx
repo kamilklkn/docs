@@ -1,0 +1,116 @@
+---
+title: 'İşlem Durum Sorgulama'
+description: 'İşlem sorgulama servisi, ödeme sonucunun alınamadığı durumlarda işlemin güncel durumunu kontrol etmek için kullanılır.'
+---
+
+Bu servis, yapılan finansal işlemin sonucunu sorgulamak için kullanılır.
+
+Provision servisi normalde işlem sonucunu senkron olarak döner; ancak herhangi bir nedenle yanıt alınamayan durumlarda, işlem sorgulama servisi aracılığıyla ilgili işlemin güncel durumu öğrenilebilir.
+
+**İstek Tipi:** application/json  
+
+**Tablo 5.23. Inquire Servisi Girdi Parametreleri**
+
+| Parametre Adı                   | Veri Tipi | Açıklama                                                     | Zorunluluk |
+|---------------------------------|----------|--------------------------------------------------------------|------------|
+| paymentConversationId           | string   | Ödeme esnasında verilen benzersiz değer                      | Evet       |
+| orderId                         | string   | Provizyon işlemi cevabında verilen sipariş numarası          | Evet       |
+| languageCode                    | string   | Cevabın alınacağı dil bilgisi (default: TR)                  | Hayır      |
+| merchantCustomerEmail           | string   | Üye iş yeri müşterisinin email bilgisi                       | Hayır      |
+| merchantCustomerIdentityNumber  | string   | Üye iş yeri müşterisinin kimlik bilgisi                      | Hayır      |
+| merchantCustomerIp              | string   | Üye iş yeri müşterisinin IP bilgisi                          | Hayır      |
+| merchantCustomerPhoneCode       | string   | Üye iş yeri müşterisinin telefon kodu bilgisi                | Hayır      |
+| merchantCustomerPhoneNumber     | string   | Üye iş yeri müşterisinin telefon numarası bilgisi            | Hayır      |
+
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "paymentConversationId": "1515954869",
+    "languageCode": "TR",
+    "orderId": "",
+    "merchantCustomerEmail": "customer@gmail.com",
+    "merchantCustomerIdentityNumber": "20556978630",
+    "merchantCustomerIp": "123.12.12.21",
+    "merchantCustomerPhoneCode": "90",
+    "merchantCustomerPhoneNumber": "5305588999"
+  }
+```
+</CodeGroup>
+
+### Tablo 5.25. Inquire Servisi Çıktı Parametreleri
+
+
+| Parametre Adı        | Veri Tipi               | Açıklama                                                                 | Zorunluluk |
+|----------------------|-------------------------|--------------------------------------------------------------------------|------------|
+| paymentConversationId| string                  | Ödeme esnasında verilen benzersiz değer                                  | Evet       |
+| isSucceeded          | boolean (true/false)    | İşlem durumu                                                             | Evet       |
+| errorCode            | string                  | Hata kodu                                                                | Evet       |
+| errorMessage         | string                  | Hata mesajı                                                              | Evet       |
+| orderId              | string                  | Provizyon işlemi cevabında verilen sipariş numarası                      | Evet       |
+| transactionType      | string                  | İşlem tipi (Auth / PreAuth / Return / PostAuth / Reverse)               | Evet       |
+| transactionStatus    | string                  | İşlem durumu (Pending / Fail / Success / Returned / PartiallyReturned / Reversed / Closed / PartiallyClosed) | Evet |
+| amount               | number                  | İşlem tutarı                                                             | Evet       |
+| pointAmount          | number                  | İşlemde kullanılacak puan tutarı                                         | Hayır      |
+| currency             | string                  | İşleme ait para birimi (default: TRY)                                   | Evet       |
+| installmentCount     | integer                 | İşleme ait taksit değeri                                                 | Hayır      |
+| binNumber            | string                  | İşlem yapılan karta ait BIN değeri                                       | Evet       |
+| cardNumber           | string                  | Kart numarası                                                            | Evet       |
+| cardBrand            | string                  | Kart markası (Undefined / JCB / UnionPay / Maestro / Amex / Visa / Troy / Master / Discover / Diners) | Evet |
+| cardNetwork          | string                  | Kart ağı (Unknown / CardFinans / MilesSmiles / World / Paraf / Maximum / Axess / AsyaCard / Advantage / Bonus / BankKartCombo) | Evet |
+| cardType             | string                  | Kart tipi (Unknown / Credit / Debit / Prepaid)                          | Evet       |
+| issuerBankCode       | integer                 | Kartın bankasına ait kod                                                 | Evet       |
+| is3ds                | boolean (true/false)    | İşlemin 3D Secure bilgisi                                                | Evet       |
+| approvalCode         | string                  | Bankadan dönen onay kodu                                                 | Hayır      |
+| returnStatus         | string                  | İade durumu bilgisi                                                      | Hayır      |
+| provisionList        | list                    | İşlem tarihçesi ve detayları (amount, transactionStatus, transactionType, transactionDate, provisionNumber, reconciliationStatus) | Evet |
+
+### Tablo 5.26. Inquire Servisi Örnek Response
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "paymentConversationId": "3dd9ede9-2282-4d33-a956-dc01a7b6d5ef",
+    "orderId": "",
+    "transactionType": "Auth",
+    "transactionStatus": "Fail",
+    "amount": 10.0,
+    "pointAmount": 0.0,
+    "currency": "",
+    "installmentCount": 2,
+    "binNumber": "",
+    "cardNumber": "",
+    "cardBrand": "Undefined",
+    "cardNetwork": "Unknown",
+    "cardType": "Unknown",
+    "issuerBankCode": 0,
+    "is3ds": false,
+    "provisionList": [
+      {
+        "amount": 10.0,
+        "transactionStatus": "Fail",
+        "transactionType": "Auth",
+        "transactionDate": "2025-05-16 13:43:49",
+        "reconciliationDate": "20250516000000000",
+        "provisionNumber": null
+      }
+    ],
+    "returnStatus": "NoAction",
+    "approvalCode": null,
+    "isSucceeded": true,
+    "errorCode": "",
+    "errorMessage": "",
+    "responseHeader": {
+      "conversationId": "1094389093",
+      "responseDateTime": "20251205170457401",
+      "responseCode": "PFC005",
+      "responseDescription": "VposNotFoundException - MissingMerchantVposException",
+      "transactionId": "e905100d-2b31-4897-82b1-9f7f9570ffcc",
+      "requestId": "781d84c5-8537-4d26-a253-210f9f46fec5",
+      "processingTime": 393,
+      "apiVersion": "1.0.1"
+    }
+  }
+```
+</CodeGroup>
+

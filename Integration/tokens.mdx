@@ -1,0 +1,258 @@
+---
+title: 'Kart Token Oluşturma'
+description: 'Kart Token Servisi, kart bilgilerini güvenli şekilde tokena dönüştürerek ödeme işlemlerinde kullanılmasını sağlar.'
+---
+
+Kart numarası girilerek gerçekleştirilen finansal işlemlerde, işlem öncesinde kart bilgilerini temsil eden bir token oluşturulması gerekmektedir. Üretilen bu token değeri kullanılarak, ilgili işlem tipi için ödeme servisi çağrılır. Böylece kart bilgileri doğrudan ödeme adımında kullanılmaz.
+
+<Info>Bu servis, HTTP Form POST yöntemi ile çalışır. Diğer API çağrılarından farklı olarak, kimlik doğrulama ve kart bilgileri header üzerinden değil, form-data formatında gönderilir (Tablo 5.2).</Info>
+
+<Callout icon="key" color="#FFC107" iconType="regular"> Bu yaklaşımın amacı; kart numarasının backend sistemlere hiç alınmadan, form post yöntemiyle önce tokenlaştırılması, ardından backend tarafında yalnızca bu token değeri ile işlem yapılmasının sağlanmasıdır. Bu sayede PCI uyumluluğu ve veri güvenliği güçlendirilir. </Callout>
+
+Token oluşturulacak karta ait bilgiler, kimlik doğrulama parametreleri ile birlikte Tablo 5.1’de belirtilen alanlar üzerinden iletilmelidir.
+
+**İstek Tipi:** multipart/form-data  
+
+### Tablo 5.1. Kart Token Servisi Girdi Parametreleri
+
+| Parametre Adı    | Veri Tipi | Açıklama                               | Zorunluluk |
+|------------------|----------|----------------------------------------|------------|
+| publicKey        | string   | Üye iş yeri açık anahtarı              | Evet       |
+| nonce            | string   | Zaman damgası                          | Evet       |
+| signature        | string   | Kimlik anahtar değeri                  | Evet       |
+| conversationId   | string   | Üye iş yeri benzersiz değeri           | Evet       |
+| merchantNumber   | string   | Üye iş yeri numarası                   | Evet       |
+| cardNumber       | string   | Kart numarası                          | Evet       |
+| expireMonth      | string   | Son kullanma tarihi ay değeri          | Evet       |
+| expireYear       | string   | Son kullanma tarihi yıl değeri         | Evet       |
+| cvv              | string   | Güvenlik kodu                          | Evet       |
+
+
+
+### Tablo 5.2. Kart Token Servisi Örnek Request (form-data)
+
+
+<CodeGroup dropdown>
+  ```javascript form-data theme={null}
+  const formData = new FormData();
+  formData.append('CardNumber', '4355093000777068');
+  formData.append('ExpireMonth', '11');
+  formData.append('ExpireYear', '40');
+  formData.append('Cvv', '313');
+  formData.append('PublicKey', '{{publicKey}}');
+  formData.append('Nonce', '{{nonce}}');
+  formData.append('Signature', '{{signature}}');
+  formData.append('ConversationId', '{{conversationId}}');
+  formData.append('MerchantNumber', '{{merchantNumber}}');
+
+  ```
+
+  ```csharp form-data theme={null}
+  using System.Net.Http;
+  using System.Net.Http.Headers;
+
+  var formData = new MultipartFormDataContent();
+
+  formData.Add(new StringContent("4355093000777068"), "CardNumber");
+  formData.Add(new StringContent("11"), "ExpireMonth");
+  formData.Add(new StringContent("40"), "ExpireYear");
+  formData.Add(new StringContent("313"), "Cvv");
+  formData.Add(new StringContent("{{publicKey}}"), "PublicKey");
+  formData.Add(new StringContent("{{nonce}}"), "Nonce");
+  formData.Add(new StringContent("{{signature}}"), "Signature");
+  formData.Add(new StringContent("{{conversationId}}"), "ConversationId");
+  formData.Add(new StringContent("{{merchantNumber}}"), "MerchantNumber");
+
+  using var client = new HttpClient();
+  var response = await client.PostAsync("{{endpointUrl}}", formData);
+   ```
+   ```php form-data theme={null}
+  <?php
+
+  $postFields = [
+      'CardNumber'     => '4355093000777068',
+      'ExpireMonth'    => '11',
+      'ExpireYear'     => '40',
+      'Cvv'            => '313',
+      'PublicKey'      => '{{publicKey}}',
+      'Nonce'          => '{{nonce}}',
+      'Signature'      => '{{signature}}',
+      'ConversationId' => '{{conversationId}}',
+      'MerchantNumber' => '{{merchantNumber}}',
+  ];
+
+  $ch = curl_init('{{endpointUrl}}');
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_POST, true);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+
+  $response = curl_exec($ch);
+  curl_close($ch);
+
+  ?>
+   ```
+   ```python form-data theme={null}
+  import requests
+
+  url = "{{endpointUrl}}"
+
+  payload = {
+      "CardNumber": "4355093000777068",
+      "ExpireMonth": "11",
+      "ExpireYear": "40",
+      "Cvv": "313",
+      "PublicKey": "{{publicKey}}",
+      "Nonce": "{{nonce}}",
+      "Signature": "{{signature}}",
+      "ConversationId": "{{conversationId}}",
+      "MerchantNumber": "{{merchantNumber}}"
+  }
+
+  response = requests.post(url, data=payload)
+
+  print(response.status_code)
+  print(response.text)
+   ```
+</CodeGroup>
+
+### Tablo 5.3. Kart Token Servisi Çıktı Parametreleri
+
+| Parametre Adı   | Veri Tipi              | Açıklama                               | Zorunluluk |
+|-----------------|------------------------|----------------------------------------|------------|
+| cardToken       | string                 | Oluşturulan token bilgisi              | Evet       |
+| signature       | string                 | Input olarak verilen kimlik anahtar değeri | Evet   |
+| isSucceeded     | boolean (true/false)   | İşlem durumu                           | Evet       |
+| errorCode       | string                 | Hata kodu                              | Evet       |
+| errorMessage    | string                 | Hata mesajı                            | Evet       |
+| conversationId  | string                 | Üye iş yeri benzersiz değeri           | Evet       |
+
+
+
+<CodeGroup dropdown>
+  ```javascript form-data theme={null}
+  {
+  "cardToken": "+oc6jxS0ABueLM+QuJnQFrZyV+B4HMHYiMx8yBH/Z90=",
+  "signature": "Xa5KVwVju7gp47rHJ4Dc91iNk09PjkTKp/pBnGwILA=",
+  "isSucceeded": true,
+  "errorCode": null,
+  "errorMessage": null,
+  "conversationId": "969109305"
+}
+  ```
+</CodeGroup>
+
+
+
+
+You can replace the tabs in a code group with a dropdown menu to toggle between languages using the `dropdown` prop.
+
+<CodeGroup dropdown>
+  ```javascript helloWorld.js theme={null}
+  console.log("Hello World");
+  ```
+
+  ```python hello_world.py theme={null}
+  print('Hello World!')
+  ```
+
+  ```java HelloWorld.java theme={null}
+  class HelloWorld {
+      public static void main(String[] args) {
+          System.out.println("Hello, World!");
+      }
+  }
+  ```
+</CodeGroup>
+
+
+
+
+<Info>
+  **Prerequisites**:
+  - Node.js version 19 or higher
+  - A docs repository with a `docs.json` file
+</Info>
+
+Follow these steps to install and run Mintlify on your operating system.
+
+<Steps>
+<Step title="Install the Mintlify CLI">
+
+```bash
+npm i -g mint
+```
+</Step>
+
+<Step title="Preview locally">
+
+Navigate to your docs directory where your `docs.json` file is located, and run the following command:
+
+```bash
+mint dev
+```
+
+A local preview of your documentation will be available at `http://localhost:3000`.
+
+</Step>
+</Steps>
+
+## Custom ports
+
+By default, Mintlify uses port 3000. You can customize the port Mintlify runs on by using the `--port` flag. For example, to run Mintlify on port 3333, use this command:
+
+```bash
+mint dev --port 3333
+```
+
+If you attempt to run Mintlify on a port that's already in use, it will use the next available port:
+
+```md
+Port 3000 is already in use. Trying 3001 instead.
+```
+
+## Mintlify versions
+
+Please note that each CLI release is associated with a specific version of Mintlify. If your local preview does not align with the production version, please update the CLI:
+
+```bash
+npm mint update
+```
+
+## Validating links
+
+The CLI can assist with validating links in your documentation. To identify any broken links, use the following command:
+
+```bash
+mint broken-links
+```
+
+## Deployment
+
+If the deployment is successful, you should see the following:
+
+<Frame>
+  <img src="/images/checks-passed.png" alt="Screenshot of a deployment confirmation message that says All checks have passed." style={{ borderRadius: '0.5rem' }} />
+</Frame>
+
+## Code formatting
+
+We suggest using extensions on your IDE to recognize and format MDX. If you're a VSCode user, consider the [MDX VSCode extension](https://marketplace.visualstudio.com/items?itemName=unifiedjs.vscode-mdx) for syntax highlighting, and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) for code formatting.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title='Error: Could not load the "sharp" module using the darwin-arm64 runtime'>
+
+    This may be due to an outdated version of node. Try the following:
+    1. Remove the currently-installed version of the CLI: `npm remove -g mint`
+    2. Upgrade to Node v19 or higher.
+    3. Reinstall the CLI: `npm i -g mint`
+  </Accordion>
+
+  <Accordion title="Issue: Encountering an unknown error">
+  
+    Solution: Go to the root of your device and delete the `~/.mintlify` folder. Then run `mint dev` again.
+  </Accordion>
+</AccordionGroup>
+
+Curious about what changed in the latest CLI version? Check out the [CLI changelog](https://www.npmjs.com/package/mintlify?activeTab=versions).

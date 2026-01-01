@@ -1,0 +1,14 @@
+---
+title: 'Kart Token Oluşturma'
+openapi: 'POST /plants'
+description: 'Kart Token Servisi, kart bilgilerini güvenli şekilde tokena dönüştürerek ödeme işlemlerinde kullanılmasını sağlar.'
+---
+Kart numarası girilerek gerçekleştirilen finansal işlemlerde, işlem öncesinde kart bilgilerini temsil eden bir token oluşturulması gerekmektedir. Üretilen bu token değeri kullanılarak, ilgili işlem tipi için ödeme servisi çağrılır. Böylece kart bilgileri doğrudan ödeme adımında kullanılmaz.
+
+<Info>Bu servis, HTTP Form POST yöntemi ile çalışır. Diğer API çağrılarından farklı olarak, kimlik doğrulama ve kart bilgileri header üzerinden değil, form-data formatında gönderilir (Tablo 5.2).</Info>
+
+<Callout icon="key" color="#FFC107" iconType="regular"> Bu yaklaşımın amacı; kart numarasının backend sistemlere hiç alınmadan, form post yöntemiyle önce tokenlaştırılması, ardından backend tarafında yalnızca bu token değeri ile işlem yapılmasının sağlanmasıdır. Bu sayede PCI uyumluluğu ve veri güvenliği güçlendirilir. </Callout>
+
+
+
+Token oluşturulacak karta ait bilgiler, kimlik doğrulama parametreleri ile birlikte Tablo 5.1’de belirtilen alanlar üzerinden iletilmelidir.

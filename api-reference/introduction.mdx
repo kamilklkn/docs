@@ -1,33 +1,53 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "Başlangıç"
+description: "Bir hesap oluşturun ve 1000pay üzerinde nasıl uygulama geliştireceğinizi öğrenin."
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+1000pay000Pay olarak; güvenli, ölçeklenebilir ve regülasyonlara tam uyumlu ödeme altyapılarını herkes için erişilebilir hâle getirme vizyonuyla hareket ediyoruz. Bu vizyon doğrultusunda, geliştiricilerin ve teknik ekiplerin hızlı, sorunsuz ve sürdürülebilir entegrasyonlar gerçekleştirebilmesi için 1000Pay Geliştirici Portalı’nı oluşturduk.
+Portalımız; sanal POS, 3D Secure ödeme akışları, iade–iptal süreçleri, linkle ödeme ve hosted payment gibi tüm ödeme servislerine tek bir merkezden erişmenizi sağlayacak şekilde tasarlanmıştır.
 
-## Welcome
+## 1000Pay Geliştirici Portalı’nda Neler Bulabilirsiniz?
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+Design a docs site that looks great and empowers your users.
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+<Columns cols={2}>
+  <Card
+    title="Başlarken"
+    icon="pen-to-square"
+    href="/development"
+  >
+    Edit your docs locally and preview them in real time.
+  </Card>
+  <Card
+    title="Ödeme Ürünleri"
+    icon="palette"
+    href="/essentials/settings"
+  >
+    Customize the design and colors of your site to match your brand.
+  </Card>
+    <Card
+    title="Ödeme Akışları"
+    icon="map"
+    href="/essentials/navigation"
+  >
+    Organize your docs to help users find what they need and succeed with your product.
+  </Card>
+  <Card
+    title="Hata Yönetimi"
+    icon="terminal"
+    href="/api-reference/introduction"
+  >
+    Auto-generate API documentation from OpenAPI specifications.
+  </Card>
+   <Card
+    title="Ekler"
+    icon="terminal"
+    href="/api-reference/introduction"
+  >
+    Auto-generate API documentation from OpenAPI specifications.
+  </Card>
+</Columns>
 
-## Authentication
+İster bir e-ticaret platformu, ister mobil uygulama ya da kurumsal bir ödeme altyapısı geliştiriyor olun; 1000Pay Geliştirici Portalı, çevrimiçi ödemeleri ürününüze hızlı ve güvenli bir şekilde entegre edebilmeniz için güçlü bir altyapı sunar.
+Amacımız; son kullanıcılarınıza kesintisiz bir ödeme deneyimi sağlarken, sizin tarafınızda entegrasyon süreçlerini net, öngörülebilir ve verimli hâle getirmektir
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
-
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
