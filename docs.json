@@ -3,129 +3,136 @@
   "theme": "mint",
   "name": "1000pay",
   "styling": {
-  "eyebrows": "breadcrumbs"
-},
+      "eyebrows": "breadcrumbs"
+  },
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+      "primary": "#16A34A",
+      "light": "#07C983",
+      "dark": "#15803D"
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "tabs": [
-      {
-        "tab": "Kılavuzlar",
-        "groups": [
+      "tabs": [
           {
-            "group": "Başlarken",
-            "pages": [
-              "index", {
-                "group": "Hazırlık",
-                "expanded": false,
-                "pages": [
-                  "/quickstart/quickstart",
-                  "/quickstart/sandbox",
-                  "/quickstart/postman-collections",
-                  "/quickstart/live-vs-sandbox",
-                  "/quickstart/service-details"
-                ]
+              "tab": "Kılavuzlar",
+              "groups": [
+                  {
+                      "group": "Başlarken",
+                      "pages": [
+                          "index",
+                          {
+                              "group": "Hazırlık",
+                              "expanded": false,
+                              "pages": [
+                                  "/quickstart/quickstart",
+                                  "/quickstart/sandbox",
+                                  "/quickstart/postman-collections",
+                                  "/quickstart/live-vs-sandbox",
+                                  "/quickstart/service-details"
+                              ]
+                          }
+                      ]
+                  },
+                  {
+                      "group": "API Entegrasyonu",
+                      "pages": [
+                          "Integration/tokens",
+                          {
+                              "group": "NON-3DS Entegrasyonu",
+                              "expanded": false,
+                              "pages": [
+                                  "Integration/provision"
+                              ]
+                          },
+                          {
+                              "group": "3DS Entegrasyonu",
+                              "expanded": false,
+                              "pages": [
+                                  "/Integration/provision3d",
+                                  "/Integration/inquire"
+                              ]
+                          },
+                          "/Integration/pointInquiry",
+                          "/Integration/reverse",
+                          "/Integration/return",
+                          "/Integration/bin-information",
+                          "/Integration/installment-inquiry"
+                      ]
+                  },
+                  {
+                      "group": "Diğer Ödeme Metotları",
+                      "pages": [
+                          "Integration/link-provision",
+                          "Integration/hosted-payment",
+                          "essentials/images",
+                          "essentials/reusable-snippets",
+                                "essentials/settings",
+                          "essentials/navigation"
+                      ]
+                  },
+                  {
+                      "group": "Hata Yönetimi",
+                      "pages": [
+                          "ai-tools/cursor",
+                          "ai-tools/claude-code",
+                          "ai-tools/windsurf"
+                      ]
+                  }
+              ]
+          },
+          {
+              "tab": "API Referansları",
+              "groups": [
+                  {
+                      "group": "API Belgeleme",
+                      "pages": [
+                          "api-reference/introduction",
+                          "api-reference/quickstart",
+                          "api-reference/sandbox",
+                          "api-reference/postman-collections",
+                          "api-reference/live-vs-sandbox",
+                          "api-reference/service-details"
+                      ]
+                  },
+                  {
+                      "group": "Endpoint examples",
+                      "pages": [
+                          "api-reference/endpoint/get-token",
+                          "api-reference/endpoint/create",
+                          "api-reference/endpoint/delete",
+                          "api-reference/endpoint/webhook"
+                      ]
+                  }
+              ]
+          }
+      ],
+      "global": {
+          "anchors": [
+              {
+                  "anchor": "Documentation",
+                  "href": "https://mintlify.com/docs",
+                  "icon": "book-open-cover"
               }
-            ]
-          },
-          {
-            "group": "Entegrasyon",
-             "pages": [
-               "Integration/tokens",
-               "Integration/provision",{
-                "group": "3D Secure Ödeme Süreci",
-                "expanded": false,
-                "pages": [
-                  "/Integration/provision3d",
-                  "/Integration/inquire"
-                ]
-              },
-              "/Integration/pointInquiry",
-              "/Integration/reverse",
-              "/Integration/return",
-              "/Integration/bin-information",
-              "/Integration/installment-inquiry",
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Ödeme Akışları",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "Hata Yönetimi",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API Referansları",
-        "groups": [
-          {
-            "group": "API Belgeleme",
-            "pages": [
-              "api-reference/introduction",
-              "api-reference/quickstart",
-               "api-reference/sandbox",
-               "api-reference/postman-collections",
-                "api-reference/live-vs-sandbox",
-                 "api-reference/service-details"
-            ]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get-token",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ]
-          }
-        ]
+          ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        }
-      ]
-    }
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+      "light": "/logo/light.svg",
+      "dark": "/logo/dark.svg"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Yardım",
-        "href": "mailto:destek@1000pay.com"
-      }
-    ]
+      "links": [
+          {
+              "label": "Yardım",
+              "href": "mailto:destek@1000pay.com"
+          }
+      ]
   },
-  
   "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+      "socials": {
+          "x": "https://x.com/mintlify",
+          "github": "https://github.com/mintlify",
+          "linkedin": "https://linkedin.com/company/mintlify"
+      }
   }
 }

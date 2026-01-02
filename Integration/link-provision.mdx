@@ -1,0 +1,86 @@
+---
+title: 'Linkle Ödeme Servisi'
+description: 'Linkle Ödeme Servisi, link üzerinden web veya uygulama olmadan güvenli ödeme alınmasını sağlar.'
+---
+
+Linkle Ödeme Servisi, web sitesi veya mobil uygulama entegrasyonu olmadan sanal POS üzerinden ödeme alınmasını sağlar. İşletmeler; müşterilerine e-posta, SMS veya sosyal medya aracılığıyla özel bir ödeme bağlantısı göndererek, güvenli ve hızlı şekilde tahsilat gerçekleştirebilir.
+
+**İstek Tipi:** application/json 
+### Tablo 5.47. LinkProvision Servisi Girdi Parametreleri
+
+| Parametre Adı          | Veri Tipi | Açıklama                                                     | Zorunluluk |
+|------------------------|----------|--------------------------------------------------------------|------------|
+| linkCode               | string   | Link kodu                                                    | Evet       |
+| amount                 | number   | İşlem tutarı                                                 | Evet       |
+| pointAmount            | number   | İşlemde kullanılacak puan tutarı                             | Hayır      |
+| cardToken              | string   | Oluşturulan token bilgisi                                    | Evet       |
+| cardHolderName         | string   | Kart sahibi adı                                              | Evet       |
+| paymentType            | string   | İşlem tipi (Auth / preAuth / postAuth)                       | Evet       |
+| integrationMode        | string   | Entegrasyon modu                                             | Evet       |
+| installmentCount       | integer  | İşleme ait taksit değeri                                     | Hayır      |
+| threeDSessionId        | string   | 3D Secure işlem için oluşturulan değer                       | Hayır      |
+| originalOrderId        | string   | Orijinal işleme ait sipariş numarası (postAuth gerekli)      | Hayır      |
+| languageCode           | string   | Cevabın alınacağı dil bilgisi (default: TR)                  | Hayır      |
+| customerName           | string   | Müşterinin adı                                               | Hayır      |
+| customerEmail          | string   | Müşterinin e-posta adresi                                    | Hayır      |
+| customerPhoneNumber    | string   | Müşterinin telefonu                                         | Hayır      |
+| customerAddress        | string   | Müşterinin adresi                                           | Hayır      |
+| customerNote           | string   | Müşteri notu                                                 | Hayır      |
+| gateway                | string   | Gateway bilgisi                                              | Hayır      |
+
+### Tablo 5.48. LinkProvision Servisi Örnek Request
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "linkCode": "kDyoyQNT",
+    "amount": 1,
+    "pointAmount": 0,
+    "cardToken": "{{cardToken}}",
+    "cardHolderName": "{{cardHolderName}}",
+    "paymentType": "Auth",
+    "integrationMode": "Unknown",
+    "installmentCount": 0,
+    "threeDSessionId": "",
+    "originalOrderId": "",
+    "languageCode": "TR",
+    "customerName": "",
+    "customerEmail": "",
+    "customerPhoneNumber": "",
+    "customerAddress": "",
+    "customerNote": "",
+    "gateway": "Api"
+  }
+```
+</CodeGroup>
+
+
+### Tablo 5.49. LinkProvision Servisi Çıktı Parametreleri
+
+| Parametre Adı   | Veri Tipi            | Açıklama                               | Zorunluluk |
+|-----------------|----------------------|----------------------------------------|------------|
+| orderId         | string               | İşlem cevabında verilen sipariş numarası | Evet       |
+| conversationId  | string               | Üye iş yeri benzersiz değeri            | Evet       |
+| isSucceeded     | boolean (true/false) | İşlem durumu                            | Evet       |
+| errorCode       | string               | Hata kodu                               | Evet       |
+| errorMessage    | string               | Hata mesajı                             | Evet       |
+| linkUrlPath     | string               | Ödeme linki                             | Evet       |                                   | Hayır      |
+
+
+
+### Tablo 5.42. Bin Sorgulama Servisi Örnek Response
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "isSucceeded": true,
+    "errorCode": null,
+    "errorMessage": null,
+    "conversationId": null,
+    "linkUrlPath": "kDyoyQNT",
+    "orderId": "Banka2405500000929102741"
+  }
+```
+</CodeGroup>
+
+

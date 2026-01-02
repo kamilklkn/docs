@@ -1,0 +1,234 @@
+---
+title: 'Hosted Payment Servisi'
+description: 'Hosted Payment Servisi, kullanıcıların 1000pay tarafından sunulan güvenli ödeme sayfasına yönlendirilerek ödeme işlemini tamamlamasını sağlar.'
+---
+
+Hosted Payment Servisi, ödeme sürecinin 1000pay tarafından barındırılan güvenli bir ödeme sayfası üzerinden gerçekleştirilmesini sağlar. Bu servis HTTP Form POST yöntemiyle çalışır ve çağrı sonucunda bir paymentUrl üretilir.
+
+Oluşturulan paymentUrl aracılığıyla kullanıcı ödeme sayfasına yönlendirilir ve kart bilgileri doğrudan bu sayfa üzerinden girilerek ödeme işlemi güvenli şekilde tamamlanır.
+
+**İstek Tipi:** application/json 
+### Tablo 5.51. Hosted Payment Servisi Girdi Parametreleri
+
+
+
+| Parametre Adı            | Veri Tipi               | Açıklama                                                                 | Zorunluluk |
+|--------------------------|-------------------------|--------------------------------------------------------------------------|------------|
+| orderId                  | string                  | İşlem benzersiz değeri                                                   | Evet       |
+| amount                   | decimal                 | İşlem tutarı                                                             | Evet       |
+| currency                 | int                     | Para birimi                                                              | Evet       |
+| commissionFromCustomer   | boolean (true/false)    | Komisyonun müşteriden alınıp alınmayacağını gösteren değer               | Evet       |
+| is3dRequired             | boolean (true/false)    | 3D’li işlem durumu                                                        | Evet       |
+| callbackUrl              | string                  | İşlemin sonuçlandığı bilgisinin iletileceği adres                         | Evet       |
+| returnUrl                | string                  | İşlemin sonuçlandığı bilgisinin iletileceği adres                         | Evet       |
+| name                     | string                  | İşlem sahibi adı                                                         | Evet       |
+| surname                  | string                  | İşlem sahibi soyadı                                                      | Evet       |
+| email                    | string                  | İşlem sahibi emaili                                                      | Evet       |
+| phoneNumer               | string                  | İşlem sahibi telefon numarası                                            | Evet       |
+| clientIpAddress          | string                  | Üye iş yeri IP adresi                                                    | Evet       |
+| languageCode             | string                  | Cevabın alınacağı dil bilgisi (default: TR)                              | Hayır      |
+| enableInstallments       | boolean (true/false)    | Taksit kullanım durumu                                                   | Hayır      |
+| installments             | list                    | CardNetwork’e göre belirlenen taksit tutarları listesi                   | Hayır      |
+|                          |                         | (cardNetwork - amount - installment)                                    |            |
+| pageViewType             | string                  | Sayfa görüntüleme türü                                                   | Evet       |
+
+
+
+
+### Tablo 5.48. LinkProvision Servisi Örnek Request
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "orderId": "123123123",
+    "amount": 55,
+    "currency": 949,
+    "is3dRequired": false,
+    "callbackUrl": "www.google.com",
+    "returnUrl": "www.google.com",
+    "name": "İsim",
+    "surname": "Soyisim",
+    "email": "isim.soyisim@linktera.com",
+    "phoneNumer": "5555555555",
+    "clientIpAddress": "127.0.0.1",
+    "languageCode": "TR",
+    "commissionFromCustomer": false,
+    "enableInstallments": true,
+    "installments": [
+      {
+        "cardNetwork": "Unknown",
+        "amount": null,
+        "installment": 3
+      },
+      {
+        "cardNetwork": "Bonus",
+        "amount": null,
+        "installment": 4
+      }
+    ],
+    "pageViewType": "Redirect"
+  }
+```
+</CodeGroup>
+
+
+### Tablo 5.53. Hosted Payment Servis Çıktı Parametreleri
+
+| Parametre Adı   | Veri Tipi               | Açıklama                                                      | Zorunluluk |
+|-----------------|-------------------------|---------------------------------------------------------------|------------|
+| conversationId  | string                  | Üye iş yeri benzersiz değeri                                  | Evet       |
+| isSucceeded     | boolean (true/false)    | İşlem durumu                                                  | Evet       |
+| errorCode       | string                  | Hata kodu                                                     | Evet       |
+| errorMessage    | string                  | Hata mesajı                                                   | Evet       |
+| paymentUrl      | string                  | Kullanıcıyı Hosted Payment sayfasına yönlendirecek URL       | Evet       |
+| trackingId      | string                  | İşlemin takip edilmesi için kullanılacak ID                  | Evet       |
+| expiryDate      | datetime                | İşlem için verilen URL’in geçerlilik süresi                  | Evet       |
+| languageCode    | string                  | Cevabın alınacağı dil bilgisi (default: TR)                  | Evet       |
+| pageViewType    | string                  | Sayfa görüntüleme türü                                        | Evet       |                                | Hayır      |
+
+
+
+### Tablo 5.54. Hosted Payment Örnek Response
+
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "paymentUrl": "http://10.222.21.16:4203/hosted-payment/ThrbWZpgKyyzLqpbwKFJvHsD?pageView=Redirect",
+    "trackingId": "ThrbWZpgKyyzLqpbwKFJvHsD",
+    "expiryDate": "2024-04-19T17:20:59.1813451+03:00",
+    "languageCode": "TR",
+    "pageViewType": "Redirect",
+    "isSucceeded": true,
+    "errorCode": null,
+    "errorMessage": null,
+    "conversationId": "933207676"
+  }
+```
+</CodeGroup>
+
+
+## Hosted Payment Sorgulama
+
+Hosted Payment Sorgulama servisi, HTTP Form GET yöntemi ile çalışır ve başlatılmış bir Hosted Payment işleminin durumunu sorgulamak için kullanılır.
+
+Sorgulama işlemi, Hosted Payment başlatılırken oluşturulan **trackingId** üzerinden gerçekleştirilir.
+
+**Örnek Kullanım:** baseUrl/v1/HostedPayment/trackingId
+
+### Tablo 5.55. Hosted Payment Sorgulama Servisi Girdi Parametreleri 
+
+| Parametre Adı   | Veri Tipi | Açıklama                                              | Zorunluluk |
+|-----------------|----------|-------------------------------------------------------|------------|
+| clientIpAddress | string   | Üye iş yeri IP adresi                                 | Evet       |
+| publicKey       | string   | Üye iş yeri açık anahtarı                             | Evet       |
+| nonce           | string   | Zaman damgası                                        | Evet       |
+| signature       | string   | Kimlik anahtar değeri                                 | Evet       |
+| conversationId  | string   | Üye iş yeri benzersiz değeri                          | Evet       |
+| merchantNumber  | string   | Üye iş yeri numarası                                  | Evet       |
+| trackingId      | string   | İşlem başlatılırken alınan trackingId değeri          | Evet       |
+
+### Tablo 5.56. Hosted Payment Sorgulama Servisi Header Örneği
+
+| Key             | Value                    |
+|-----------------|--------------------------|
+| clientIpAddress | 192.1.1.0                |
+| publicKey       | publicKey            |
+| nonce           | nonce                |
+| signature       | signature            |
+| conversationId  | conversationId       |
+| merchantNumber  | merchantNumber       |
+| trackingId      | VDJxalkXbwUSFIMPrsAIbeM  |
+
+### Tablo 5.57. Hosted Payment Sorgulama Servisi Çıktı Parametreleri
+
+| Parametre Adı              | Veri Tipi               | Açıklama                                                                 | Zorunluluk |
+|----------------------------|-------------------------|--------------------------------------------------------------------------|------------|
+| conversationId             | string                  | Üye iş yeri benzersiz değeri                                              | Evet       |
+| isSucceeded                | boolean (true/false)    | İşlem durumu                                                             | Evet       |
+| errorCode                  | string                  | Hata kodu                                                                | Evet       |
+| errorMessage               | string                  | Hata mesajı                                                              | Evet       |
+| trackingId                 | string                  | İşlemin takip edilmesi için kullanılacak ID                              | Evet       |
+| expiryDate                 | date time               | İşlem için verilen URL’in geçerlilik süresi                              | Evet       |
+| hppStatus                  | string                  | İşlemin aktif ya da pasif olma durumunu gösteren değer                   | Evet       |
+| hppPaymentStatus           | string                  | İşlemin ödeme durumu                                                     | Evet       |
+| webhookStatus              | string                  | Webhook durumu                                                           | Evet       |
+| originalOrderId            | string                  | Orijinal işlemin benzersiz değeri                                        | Evet       |
+| amount                     | decimal                 | İşlem tutarı                                                             | Evet       |
+| currency                   | integer                 | İşlem para birimi                                                        | Evet       |
+| commissionFromCustomer     | boolean (true/false)    | Müşteriden komisyon alınma durumu                                        | Evet       |
+| is3dRequired               | boolean (true/false)    | 3D’li işlem durumu                                                        | Evet       |
+| callbackUrl                | string                  | İşlemin sonuçlandığı bilgisinin iletileceği adres                         | Evet       |
+| returnUrl                  | string                  | İşlemin sonuçlandığı bilgisinin iletileceği adres                         | Evet       |
+| name                       | string                  | İşlem sahibi adı                                                         | Evet       |
+| surname                    | string                  | İşlem sahibi soyadı                                                      | Evet       |
+| email                      | string                  | İşlem sahibi emaili                                                      | Evet       |
+| phoneNumer                 | string                  | İşlem sahibi telefon numarası                                            | Evet       |
+| clientIpAddress            | string                  | Üye iş yeri IP adresi                                                    | Evet       |
+| merchantId                 | string                  | Üye iş yeri benzersiz değeri                                             | Evet       |
+| merchantName               | string                  | Üye iş yeri ismi                                                         | Evet       |
+| merchantNumber             | string                  | Üye iş yeri kodu                                                         | Evet       |
+| webhookRetryCount          | string                  | Webhook deneme sayısı                                                    | Evet       |
+| pageViewType               | string                  | Sayfa görüntüleme türü                                                   | Evet       |
+| merchantInstallments       | string                  | Üye iş yeri taksit bilgileri                                             | Evet       |
+| transactionType            | string                  | İşlem tipi                                                               | Evet       |
+| transactionDate            | string                  | İşlem tarihi                                                             | Evet       |
+| languageCode               | string                  | Cevabın alınacağı dil bilgisi (default: TR)                              | Evet       |
+| orderId                    | string                  | İşlem benzersiz değeri                                                   | Evet       |
+| installmentCount           | integer                 | İşleme ait taksit değeri                                                 | Hayır      |
+| transactionStatus          | string                  | İşlem durumu (Pending / Fail / Success / Returned / PartiallyReturned / Reversed / Closed / PartiallyClosed) | Evet |
+| cardNumber                 | string                  | Kart numarası                                                            | Evet       |
+| cardBrand                  | string                  | Kart markası (Undefined / JCB / UnionPay / Maestro / Amex / Visa / Troy / Master / Discover / Diners) | Evet |
+| cardNetwork                | string                  | Kart ağı (Unknown / CardFinans / MilesSmiles / World / Paraf / Maximum / Axess / AsyaCard / Advantage / Bonus / BankKartCombo) | Evet |
+| cardType                   | string                  | Kart tipi (Unknown / Credit / Debit / Prepaid)                           | Evet       |
+| is3ds                      | boolean (true/false)    | İşlemin 3D Secure bilgisi                                                | Evet       |
+| issuerBankCode             | integer                 | Kartın bankasına ait kod                                                 | Evet       |
+| trackingId                 | string                  | İşlem başlatılırken alınan trackingId değeri                             | Evet       |
+
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "trackingId": "VDJxqlkXbwUSFIMPprsAIbeM",
+    "hppStatus": "Passive",
+    "hppPaymentStatus": "Success",
+    "webhookStatus": "Pending",
+    "originalOrderId": "123723126",
+    "amount": 12.0,
+    "currency": 949,
+    "commissionFromCustomer": false,
+    "is3dRequired": false,
+    "callbackUrl": "www.google.com",
+    "returnUrl": "www.google.com",
+    "name": "İsim",
+    "surname": "Soyisim",
+    "email": "isim.soyisim@linktera.com",
+    "phoneNumer": "5555555555",
+    "clientIpAddress": "127.0.0.1",
+    "languageCode": "TR",
+    "expiryDate": "2024-04-24T15:37:14.57945",
+    "merchantId": "e7071911-320d-4c25-89e6-4bcd9a2ccaea",
+    "merchantName": "OPET/BASPET PETROL TURIZM",
+    "merchantNumber": "1100000204",
+    "webhookRetryCount": 1,
+    "pageViewType": "Redirect",
+    "merchantInstallments": [],
+    "transactionType": "Auth",
+    "transactionDate": "2024-04-24T15:32:52.421869",
+    "orderId": "123723126000001383405800",
+    "installmentCount": 0,
+    "paymentConversationId": "123723126000001383405800",
+    "transactionStatus": "Success",
+    "cardNumber": "411979******4284",
+    "cardType": "Credit",
+    "cardBrand": "Visa",
+    "cardNetwork": "World",
+    "is3ds": false,
+    "issuerBankCode": 15,
+    "isSucceeded": true,
+    "errorCode": null,
+    "errorMessage": null,
+    "conversationId": null
+  }
+  ```
+</CodeGroup>
