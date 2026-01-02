@@ -12,6 +12,7 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
+      "onThisPage": "Bu Sayfada",
       "tabs": [
           {
               "tab": "Kılavuzlar",
