@@ -1,21 +1,22 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "willow",
   "name": "1000pay",
   "styling": {
       "eyebrows": "breadcrumbs"
   },
   "colors": {
-      "primary": "#16A34A",
-      "light": "#07C983",
-      "dark": "#15803D"
+      "primary": "#3B82F6",
+      "light": "#2563EB",
+      "dark": "#1D4ED8"
   },
   "favicon": "/favicon.svg",
   "navigation": {
       "tabs": [
           {
-          
-                  
+              "tab": "Kılavuzlar",
+              "groups": [
+                  {
                       "group": "Başlarken",
                       "pages": [
                           "index",
@@ -74,8 +75,8 @@
                         "integration/test-cards"
                       ]
                   }
-              
-          
+              ]
+          }
       ]
   },
   "logo": {
