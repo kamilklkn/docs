@@ -14,9 +14,8 @@
   "navigation": {
       "tabs": [
           {
-              "tab": "Kılavuzlar",
-              "groups": [
-                  {
+          
+                  
                       "group": "Başlarken",
                       "pages": [
                           "index",
@@ -72,48 +71,12 @@
                         "integration/access-definition",
                         "integration/error-codes",
                         "integration/timeout-management",
-                        "integration/test-cards",
-                        "ai-tools/claude-code",
-                        "ai-tools/windsurf"
+                        "integration/test-cards"
                       ]
                   }
-              ]
-          },
-          {
-              "tab": "API Referansları",
-              "groups": [
-                  {
-                      "group": "API Belgeleme",
-                      "pages": [
-                          "api-reference/introduction",
-                          "api-reference/quickstart",
-                          "api-reference/sandbox",
-                          "api-reference/postman-collections",
-                          "api-reference/live-vs-sandbox",
-                          "api-reference/service-details"
-                      ]
-                  },
-                  {
-                      "group": "Endpoint examples",
-                      "pages": [
-                          "api-reference/endpoint/get-token",
-                          "api-reference/endpoint/create",
-                          "api-reference/endpoint/delete",
-                          "api-reference/endpoint/webhook"
-                      ]
-                  }
-              ]
-          }
-      ],
-      "global": {
-          "anchors": [
-              {
-                  "anchor": "Documentation",
-                  "href": "https://mintlify.com/docs",
-                  "icon": "book-open-cover"
-              }
-          ]
-      }
+              
+          
+      ]
   },
   "logo": {
       "light": "/logo/light.svg",

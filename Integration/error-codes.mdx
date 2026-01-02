@@ -1,0 +1,85 @@
+---
+title: 'Hata Kodları'
+description: '1000pay API’lerinde oluşan hatalar, errorCode ve errorMessage alanlarıyla iletilir ve hata kodları banka, kart saklama gibi gruplar altında sınıflandırılır.'
+---
+
+1000pay API’lerine gönderilen isteklerde veya ödeme işlemlerinde bir hata oluşması durumunda, ilgili hata numerik bir kod ve açıklayıcı bir mesaj ile birlikte yanıt olarak iletilir.
+
+Hata kodu **errorCode,** hatanın açıklaması ise **errorMessage** alanı üzerinden döndürülür.
+Yanıtta **isSucceed = false** değeri bulunuyorsa, işlem başarısız olarak değerlendirilmelidir.
+
+Bankaya bağlı olarak bazı hata alanları her zaman dolu olmayabilir.
+
+### Uygulama Hata Kodları
+
+| Hata Kodu | Dönüş Mesajı (TR) | Response Message (EN) |
+|----------|------------------|----------------------|
+| 0001 | Geçersiz üye iş yeri bilgisi. Lütfen daha sonra tekrar deneyiniz. | Invalid merchant information. Please try again later. |
+| 0002 | Yurtdışı kartlarından taksit yapılamaz. | Not allowed international card instalment! |
+| 0003 | Üye iş yeri durumu işlem almak için uygun değildir. Lütfen daha sonra tekrar deneyiniz. | Invalid merchant status. Please try again later. |
+| 0004 | Geçersiz işlem türü denenmektedir. Lütfen daha sonra tekrar deneyiniz. | Invalid transaction type. Please try again later. |
+| 0005 | Üye iş yerine ait pos bulunamadı. Lütfen daha sonra tekrar deneyiniz. | Vpos not found. Please try again later. |
+| 0006 | Pos Bankası bulunamadı. Lütfen daha sonra tekrar deneyiniz. | Acquire bank not found. Please try again later. |
+| 0007 | Geçersiz tutar bilgisi mevcuttur. Bilgileri kontrol ederek tekrar deneyiniz. | Invalid amount information. Please check the information and try again. |
+| 0008 | Geçersiz ödeme tipi mevcuttur. Bilgileri kontrol ederek tekrar deneyiniz. | Invalid payment type. Please check the information and try again. |
+| 0009 | Oturum bilgisi geçersizdir. Lütfen daha sonra tekrar deneyiniz. | Invalid Session information. Please try again later. |
+| 0010 | Aylık tutar limitini aştınız. Lütfen daha sonra tekrar deneyiniz. | Monthly limit amount exceeded. Please try again later. |
+| 0011 | Aylık işlem limitini aştınız. Lütfen daha sonra tekrar deneyiniz. | Monthly limit count exceeded. Please try again later. |
+| 0012 | Günlük işlem limitini aştınız. Lütfen daha sonra tekrar deneyiniz. | Daily limit count exceeded. Please try again later. |
+| 0013 | Günlük tutar limitini aştınız. Lütfen daha sonra tekrar deneyiniz. | Daily limit amount exceeded. Please try again later. |
+| 0014 | Tam 3DS doğrulama yapılmadığı için işleme izin verilmemektedir. | Half Secure not allowed. |
+| 0015 | Oturum bilgisi bulunamadı. Lütfen daha sonra tekrar deneyiniz. | Session not found. Please try again later. |
+| 0016 | Yurtdışı kartlarında işlem yapılamaz. | International card not allowed. |
+| 0017 | 3DS işlemde tutar uyuşmazlığı mevcuttur. | 3DS validation amount mismatch. |
+| 0018 | 3DS işlemde kart oturum uyuşmazlığı mevcuttur. | 3DS validation card token mismatch. |
+| 0019 | 3DS işlem oturumu son bulmuştur. | 3DS session expired. |
+| 0020 | 3DS işlemde para birimi uyuşmazlığı mevcuttur. | 3DS validation currency mismatch. |
+| 0021 | 3DS işlemde işlem türü uyuşmazlığı mevcuttur. | 3DS validation transaction type mismatch. |
+| 0022 | Kart token zaman aşımına uğramıştır. | Card token expired. |
+| 0023 | Taksitli işlem yapılamaz. | Installment not allowed. |
+| 0024 | 3DS harici işlem yapılamaz. | NonSecure not allowed. |
+| 0025 | Ön provizyon işlemi yapılamaz. | PreAuthorization not allowed. |
+| 0026 | İşlem daha önceden iade edilmiştir. | Transaction already refunded. |
+| 0027 | Geçersiz iade tutarı mevcuttur. | Invalid return amount. |
+| 0028 | Başarılı 3DS doğrulama yapılamadı. | Successful 3DS verification failed. |
+| 0029 | Başarılı 3DS doğrulama bulunamadı. | No successful 3DS verification found. |
+| 0030 | Token bilgisi bulunamamıştır. | Token information could not be found. |
+| 0031 | Link bulunamadı. | Link not found. |
+| 0032 | Link kullanım süresi bitti. | Link expired. |
+| 0033 | Link kullanım limitine ulaştı. | Link max limit count exceeded. |
+| 0034 | Ad Soyad bilgisi zorunludur. | Name and surname information can not be empty. |
+| 0035 | Adres bilgisi zorunludur. | Address information can not be empty. |
+| 0036 | Sipariş not bilgisi zorunludur. | Order note information can not be empty. |
+| 0037 | Telefon numarası bilgisi zorunludur. | Phone number can not be empty. |
+| 0038 | E-posta adres bilgisi zorunludur. | E-mail address can not be empty. |
+| 0039 | Genel toplam komisyonsuz tutardan küçük veya eşit olamaz. | The grand total cannot be less than or equal to the commission-free amount. |
+| 0040 | Karta ait puan bilgisi bulunmamaktadır. | There is no score information for the card. |
+| 0041 | Pos maliyet bilgisi bulunamadı. | Pricing profile item could not be found. |
+| 0042 | İşlem banka tarafından zaman aşımına uğramıştır. | Bank has timed out. |
+| 0043 | İşlem fraud kontrollerini geçememiştir. | The transaction did not pass fraud checks. |
+| 0044 | Sipariş numarası önceden kullanılmıştır. | The order number has already been used. |
+| 0045 | HPP yetkisi bulunmamaktadır. | There is no HPP authority. |
+| 0046 | İade yetkisi bulunmamaktadır. | There is no return authority. |
+| 0047 | İptal yetkisi bulunmamaktadır. | There is no reverse authority. |
+| 0048 | İşlem iptal edilemez. | Transaction is not reversible. |
+| 0049 | İşlem iade edilemez. | Transaction is not returnable. |
+| 0050 | İşlem blokeli olduğundan iade edilemez. | Transaction is blocked and cannot be refunded. |
+| 0051 | Tek çekim işlemden komisyon alınamaz. | Cannot take commission on advance provision. |
+| 0052 | Komisyonlu işlemde taksit tutarı bilgisi gönderilemez. | Installment amount cannot be set on provision with commission. |
+| 0054 | Günlük iade tutarı toplam işlem tutarından büyük olamaz. | Daily refund amount cannot exceed total transaction amount. |
+| 1001 | Geçersiz işlem bilgisi. | Invalid transaction information. |
+| 1002 | Girilen kart bilgileri hatalıdır. | The card information entered is incorrect. |
+| 1003 | Sistem Hatası | System Error |
+| 5000 | İşlem başarılı gerçekleşti. | The transaction was successful. |
+| 5001 | İşlem onaylanmadı. | The transaction has not been approved. |
+| 5002 | İşlem onaylanmadı. Lütfen bankanız ile iletişime geçiniz. | Please contact your bank. |
+| 5003 | Karta el koyulmuştur. | The card has been confiscated. |
+| 5004 | Kartın geçerlilik süresi bitmiştir. | Card validity expired. |
+| 5005 | Kart limiti yetersizdir. | Credit card limit insufficient. |
+| 5006 | Kart e-ticarete kapalıdır. | Card closed to e-commerce. |
+| 5007 | Sanal kart limiti yetersizdir. | Virtual card limit insufficient. |
+| 5008 | Kart kapalıdır. | Card is closed. |
+| 5009 | 3DS şifresi doğrulanamadı. | 3DS password verification failed. |
+| 5010 | Kart için 3DS tanımı bulunmamaktadır. | No 3DS definition for card. |
+| 5011 | Kredi kartı blokelidir. | Credit card is blocked. |
+| 5012 | Güvenlik kodu hatalıdır. | Security code is incorrect. |
