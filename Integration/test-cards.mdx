@@ -1,0 +1,78 @@
+---
+title: 'Test Kartları'
+description: '1000pay, Sandbox ortamında farklı senaryoları test edebilmeniz için başarılı, yabancı ve hata üreten test kartları sunar.'
+---
+
+1000pay, Sandbox ortamında test işlemlerini başlatabilmeniz için farklı senaryoları kapsayan üç ana kategoride test kartları sunar:
+	-	Başarılı Yanıt Veren Kartlar
+	- 	Yabancı Kartlar
+	- 	Hata Üreten Kartlar
+
+Bu kartlar sayesinde entegrasyonunuzu farklı işlem sonuçlarına göre güvenle test edebilirsiniz.
+
+<Info>Gerçek kartlarla ödeme işlemi Sandbox ortamında desteklenmez.</Info>
+
+<Warning>Sandbox test kartlarında kullanılacak SKT (son kullanma tarihi) ve CVV değerleri rastgele belirlenebilir. Ancak bu alanların geçerli formatta olması ve SKT bilgisinin mevcut tarihten ileri bir tarihi göstermesi zorunludur. Aksi durumda işlem testleri başarısız olabilir.</Warning>
+
+### Başarılı Yanıt Veren Kartlar
+
+Başarılı bir ödemeyi simüle etmek için aşağıdaki test kartları kullanılabilir.
+
+| Kart Numarası        | Banka                    | Kart Kuruluşu     | Kart Tipi                    |
+|---------------------|--------------------------|-------------------|------------------------------|
+| 5890040000000016    | Akbank                   | Master Card       | Banka Kartı (Debit)          |
+| 5526080000000006    | Akbank                   | Master Card       | Kredi Kartı (Credit)         |
+| 9792072000017956    | Akbank                   | Troy              | Kredi Kartı (Credit)         |
+| 4766620000000001    | Denizbank                | Visa              | Banka Kartı (Debit)          |
+| 4603450000000000    | Denizbank                | Visa              | Kredi Kartı (Credit)         |
+| 9792023757123604    | QNB                      | Troy              | Banka Kartı (Debit)          |
+| 4987490000000002    | QNB                      | Visa              | Banka Kartı (Debit)          |
+| 5311570000000005    | QNB                      | Master Card       | Kredi Kartı (Credit)         |
+| 9792020000000001    | QNB                      | Troy              | Banka Kartı (Debit)          |
+| 9792030000000000    | QNB                      | Troy              | Kredi Kartı (Credit)         |
+| 5170410000000004    | Garanti Bankası          | Master Card       | Banka Kartı (Debit)          |
+| 5400360000000003    | Garanti Bankası          | Master Card       | Kredi Kartı (Credit)         |
+| 374427000000003     | Garanti Bankası          | American Express  | Kredi Kartı (Credit)         |
+| 4475050000000003    | Halkbank                 | Visa              | Banka Kartı (Debit)          |
+| 5528790000000008    | Halkbank                 | Master Card       | Kredi Kartı (Credit)         |
+| 4059030000000009    | HSBC Bank                | Visa              | Banka Kartı (Debit)          |
+| 5504720000000003    | HSBC Bank                | Master Card       | Kredi Kartı (Credit)         |
+| 5892830000000000    | Türkiye İş Bankası       | Master Card       | Banka Kartı (Debit)          |
+| 4543590000000006    | Türkiye İş Bankası       | Visa              | Kredi Kartı (Credit)         |
+| 4910050000000006    | Vakıfbank                | Visa              | Banka Kartı (Debit)          |
+| 4157920000000002    | Vakıfbank                | Visa              | Kredi Kartı (Credit)         |
+| 6500528865390837    | Vakıfbank                | Troy              | Banka Kartı (Debit)          |
+| 6501700194147183    | Vakıfbank                | Troy              | Kredi Kartı (Credit)         |
+| 5168880000000002    | Yapı ve Kredi Bankası    | Master Card       | Banka Kartı (Debit)          |
+| 5451030000000000    | Yapı ve Kredi Bankası    | Master Card       | Kredi Kartı (Credit)         |                                              | Evet       |
+
+### Hata Üreten Kartlar
+
+Aşağıdaki test kartları, ödeme sırasında hata veya özel durum üretmek için kullanılabilir.
+
+| Kart Numarası        | Açıklama                                      |
+|---------------------|-----------------------------------------------|
+| 5406670000000009    | Success but cannot be cancelled, refund or post auth |
+| 4111111111111129    | Not sufficient funds                          |
+| 4129111111111111    | Do not honour                                 |
+| 4128111111111112    | Invalid transaction                           |
+| 4127111111111113    | Lost card                                    |
+| 4126111111111114    | Stolen card                                  |
+| 4125111111111115    | Expired card                                 |
+| 4124111111111116    | Invalid cvc2                                 |
+| 4123111111111117    | Not permitted to card holder                 |
+| 4122111111111118    | Not permitted to terminal                    |
+| 4121111111111119    | Fraud suspect                                |
+| 4120111111111110    | Pickup card                                  |
+| 4130111111111118    | General error                                |
+| 4131111111111117    | Success but mdStatus is 0                    |
+| 4141111111111115    | Success but mdStatus is 4                    |
+| 4151111111111112    | 3D Secure initialize failed                  |
+
+
+### Yabancı Kartlar
+
+| Kart Numarası        | Ülke / Kart Tipi        |
+|---------------------|-------------------------|
+| 5400010000000004    | Non-Turkish (Credit)    |
+| 4054180000000007    | Non-Turkish (Debit)     |

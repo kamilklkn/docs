@@ -1,0 +1,12 @@
+---
+title: 'Timeout Yönetim Yapısı'
+description: 'Timeout Yönetimi, yanıt alınamayan veya sonucu belirsiz işlemlerin sorgulanarak iptal veya iade edilmesini ve mutabakat farklarının önlenmesini sağlar.'
+---
+
+Üye işyerleri tarafından yapılan işlemlerde; işyeri, 1000pay veya ödeme ağı (network) kaynaklı nedenlerle anlık yanıt alınamaması durumu tüm servis mimarilerinde nadiren de olsa yaşanabilir. Bu tür belirsiz durumlarda, işlemin mutabakatının doğru şekilde sağlanması kritik önem taşır.
+
+Bir servise yapılan isteğe yanıt alınamaması ya da beklenen süre içinde yanıt gelmemesi; mutabakat farklarına ve müşteri kartından gereksiz tahsilatlara yol açabilir. Bu nedenle, tüm üye işyerlerinin belirsiz sonuçlanan işlemler için kendi timeout yönetim mekanizmalarını oluşturmaları önerilir.
+
+Beklenen yanıt alınamadığında, ilgili işlem backend sisteminiz tarafından sorgulanmalı; gerekirse iptal (reverse) veya iade (return) servisleri kullanılarak işlem güvenli şekilde sonlandırılmalıdır. Böylece olası mutabakat problemlerinin önüne geçilir.
+
+Ayrıca, belirsiz durumdaki işlemler Yönetici Paneli üzerinden görüntülenebileceği gibi, işlem hacminin yüksek olduğu senaryolarda backend sisteminizde yanıtından emin olunamayan tüm işlemler için Inquire (sorgulama) servisi kullanılarak işlem durumu netleştirilebilir ve gerekli iptal/iade aksiyonları alınabilir.

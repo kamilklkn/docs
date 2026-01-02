@@ -63,17 +63,14 @@
                       "group": "Diğer Ödeme Metotları",
                       "pages": [
                           "Integration/link-provision",
-                          "Integration/hosted-payment",
-                          "essentials/images",
-                          "essentials/reusable-snippets",
-                                "essentials/settings",
-                          "essentials/navigation"
+                          "Integration/hosted-payment"
                       ]
                   },
                   {
-                      "group": "Hata Yönetimi",
+                      "group": "Ek Bilgiler",
                       "pages": [
-                          "ai-tools/cursor",
+                        "integration/timeout-management",
+                          "integration/test-cards",
                           "ai-tools/claude-code",
                           "ai-tools/windsurf"
                       ]
