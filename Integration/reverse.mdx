@@ -1,0 +1,70 @@
+---
+title: 'İptal Servisi'
+description: 'İptal (reverse) Servisi, gerçekleştirilen bir finansal işlemin gün sonu alınmadan önce, aynı gün içinde iptal edilmesini sağlar.'
+---
+
+İptal Servisi, gerçekleştirilen bir finansal işlemin gün sonu alınmadan önce iptal edilmesini sağlar. İşlem aynı gün içinde iptal edilerek, tutarın karta yansıması engellenir ve işlem geçersiz hâle getirilir.
+
+**İstek Tipi:** application/json 
+### Tablo 5.35. Reverse Servisi Girdi Parametreleri 
+
+| Parametre Adı                  | Veri Tipi | Açıklama                                              | Zorunluluk |
+|--------------------------------|----------|-------------------------------------------------------|------------|
+| orderId                        | string   | Provizyon işlemi cevabında verilen sipariş numarası   | Evet       |
+| languageCode                   | string   | Cevabın alınacağı dil bilgisi (default: TR)           | Hayır      |
+| paymentChannel                 | string   | Ödeme kanalı bilgisi                                  | Hayır      |
+| merchantCustomerEmail          | string   | Üye iş yeri müşteri email bilgisi                     | Hayır      |
+| merchantCustomerIdentityNumber | string   | Üye iş yeri müşteri kimlik bilgisi                    | Hayır      |
+| merchantCustomerIp             | string   | Üye iş yeri müşteri IP bilgisi                        | Hayır      |
+| merchantCustomerPhoneCode      | string   | Üye iş yeri müşteri telefon kodu bilgisi              | Hayır      |
+| merchantCustomerPhoneNumber    | string   | Üye iş yeri müşteri telefon no bilgisi                | Hayır      |
+| reason                         | string   | İşlem açıklama / sebep bilgisi                        | Hayır      |
+
+
+###  Tablo 5.36. Reverse Servisi Örnek Request
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "orderId": "12110000000059484335",
+    "languageCode": "TR",
+    "paymentChannel": "PF",
+    "merchantCustomerEmail": "customer@gmail.com",
+    "merchantCustomerIdentityNumber": "20557665360",
+    "merchantCustomerIp": "123.12.12.11",
+    "merchantCustomerPhoneCode": "90",
+    "merchantCustomerPhoneNumber": "5307006050",
+    "reason": "İptal nedeni test"
+  }
+```
+</CodeGroup>
+
+
+### 5.38. Reverse Servisi Örnek Response
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "provisionNumber": "035627",
+    "reconciliationDate": "20251205171535558",
+    "approvalStatus": null,
+    "orderId": "12110000001340356597",
+    "cancelledAmount": 5.0,
+    "paymentChannel": "PF",
+    "isSucceeded": true,
+    "errorCode": null,
+    "errorMessage": null,
+    "responseHeader": {
+      "conversationId": "1676398178",
+      "responseDateTime": "20251205171535614",
+      "responseCode": "00",
+      "responseDescription": "Approved",
+      "transactionId": "e90c0511-0f04-4a7a-99d8-5242ed737907",
+      "requestId": "123123",
+      "processingTime": 2330,
+      "apiVersion": "1.0.1"
+    }
+  }
+```
+</CodeGroup>
+
+

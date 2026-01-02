@@ -41,12 +41,14 @@
                 "expanded": false,
                 "pages": [
                   "/Integration/provision3d",
-                  "/Integration/inquire",
-                  "/Integration/postman-collections",
-                  "/Integration/live-vs-sandbox",
-                  "/Integration/service-details"
+                  "/Integration/inquire"
                 ]
               },
+              "/Integration/pointInquiry",
+              "/Integration/reverse",
+              "/Integration/return",
+              "/Integration/bin-information",
+              "/Integration/installment-inquiry",
               "essentials/settings",
               "essentials/navigation"
             ]

@@ -1,0 +1,125 @@
+---
+title: 'Taksit Sorgulama Servisi'
+description: 'Taksit Sorgulama Servisi, üye işyerine özel taksit sayısı ve komisyon oranlarını sorgulamak için kullanılır.'
+---
+Taksit Sorgulama Servisi, üye işyerinin bağlı olduğu loyalty yapılarının sunduğu taksit seçeneklerini ve oranlarını görüntülemek için kullanılır.
+
+Üye işyeri numarası ve isteğe bağlı olarak kart BIN bilgisi veya işlem tutarı gönderilerek, yapılabilecek taksit sayıları ve bu taksitlere ait komisyon tutarları sorgulanabilir. İlgili bilgiler header alanında iletilir.
+
+**İstek Tipi:** application/json 
+### Tablo 5.43. Taksit Sorgulama Servisi Girdi Parametreleri
+
+| Parametre Adı     | Veri Tipi | Açıklama                      | Zorunluluk |
+|-------------------|----------|-------------------------------|------------|
+| merchantNumber    | string   | Üye iş yeri numarası          | Evet       |
+| binNumber         | string   | Kart BIN numarası             | Hayır      |
+| amount            | decimal  | Tutar                         | Hayır      |
+| publicKey         | string   | Üye iş yeri açık anahtarı     | Evet       |
+| nonce             | string   | Zaman damgası                 | Evet       |
+| signature         | string   | Kimlik anahtar değeri         | Evet       |
+| conversationId    | string   | Üye iş yeri benzersiz değeri  | Evet       |
+| clientIpAddress   | string   | Üye iş yeri IP adresi         | Evet       |
+
+### Tablo 5.44. Taksit Sorgulama Servisi Header Örneği
+
+| Key              | Value            |
+|------------------|------------------|
+| MerchantNumber   | 1100000726       |
+| BinNumber        | 415565           |
+| Amount           | 10               |
+| publicKey        | {{publicKey}}    |
+| nonce            | {{nonce}}        |
+| signature        | {{signature}}    |
+| conversationId   | {{conversationId}} |
+| clientIpAddress  | 192.1.1.0        |
+
+
+### Tablo 5.45. Taksit Sorgulama Servisi Çıktı Parametreleri
+
+| Parametre Adı           | Veri Tipi               | Açıklama                                   | Zorunluluk |
+|-------------------------|-------------------------|--------------------------------------------|------------|
+| merchantNumber          | string                  | Üye iş yeri numarası                       | Evet       |
+| cardNetwork             | string                  | Loyalty (CardFinans / World / Bonus)      | Evet       |
+| profileCardType         | string                  | Kart tipi                                  | Evet       |
+| installmentNumber       | integer                 | Taksit başlangıç sayısı                    | Evet       |
+| installmentNumberEnd    | integer                 | Taksit bitiş sayısı                        | Evet       |
+| commissionRate          | decimal                 | Komisyon oranı                             | Evet       |
+| amount                  | decimal                 | Tutar                                      | Evet       |
+| commissionAmount        | decimal                 | Komisyon tutarı                            | Evet       |
+| totalAmount             | decimal                 | Komisyon tutarı + tutar                   | Evet       |
+| blockedDayNumber        | integer                 | Bloke gün sayısı                           | Evet       |
+| isActive                | boolean (true/false)    | Aktiflik durumu                            | Evet       |
+| isSucceeded             | boolean (true/false)    | İşlem durumu                               | Evet       |
+| conversationId          | string                  | Üye iş yeri benzersiz değeri               | Evet       |                                   | Hayır      |
+
+
+
+### Tablo 5.46. Taksit Sorgulama Servisi Örnek Response
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "merchantNumber": "1100000726",
+    "loyaltyInstallmentPricing": [
+      {
+        "cardNetwork": "CardFinans",
+        "installmentPricings": [
+          {
+            "profileCardType": "Credit",
+            "installmentNumber": 0,
+            "installmentNumberEnd": 0,
+            "commissionRate": 1.1,
+            "amount": 0.0,
+            "commissionAmount": 0.0,
+            "totalAmount": 0.0,
+            "blockedDayNumber": 0,
+            "isActive": true
+          },
+          {
+            "profileCardType": "Credit",
+            "installmentNumber": 2,
+            "installmentNumberEnd": 2,
+            "commissionRate": 2.2,
+            "amount": 0.0,
+            "commissionAmount": 0.0,
+            "totalAmount": 0.0,
+            "blockedDayNumber": 0,
+            "isActive": true
+          }
+        ]
+      },
+      {
+        "cardNetwork": "World",
+        "installmentPricings": [
+          {
+            "profileCardType": "Credit",
+            "installmentNumber": 0,
+            "installmentNumberEnd": 0,
+            "commissionRate": 1.1,
+            "amount": 0.0,
+            "commissionAmount": 0.0,
+            "totalAmount": 0.0,
+            "blockedDayNumber": 0,
+            "isActive": true
+          },
+          {
+            "profileCardType": "Credit",
+            "installmentNumber": 2,
+            "installmentNumberEnd": 2,
+            "commissionRate": 2.2,
+            "amount": 0.0,
+            "commissionAmount": 0.0,
+            "totalAmount": 0.0,
+            "blockedDayNumber": 0,
+            "isActive": true
+          }
+        ]
+      }
+    ],
+    "isSucceeded": true,
+    "conversationId": "373727871"
+  }
+```
+</CodeGroup>
+
+

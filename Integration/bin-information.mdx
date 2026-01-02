@@ -1,0 +1,88 @@
+---
+title: 'Bin Sorgulama'
+description: 'Bin Sorgulama servisi, kartın BIN veya token bilgisi üzerinden temel kart detaylarını sorgulamak için kullanılır.'
+---
+
+Bin Sorgulama servisi, müşterinin kart numarasının ilk 6 veya 8 hanesi (BIN) ya da kart token bilgisi gönderilerek kartın banka, kart tipi ve benzeri temel bilgilerinin sorgulanmasını sağlar.
+
+**İstek Tipi:** application/json 
+### Tablo 5.39. Bin Sorgulama Servisi Girdi Parametreleri 
+
+| Parametre Adı | Veri Tipi | Açıklama                                      | Zorunluluk |
+|---------------|----------|-----------------------------------------------|------------|
+| cardToken     | string   | Oluşturulan token bilgisi                     | Evet       |
+| binNumber     | string   | Karta ait BIN değeri                          | Evet       |
+| languageCode  | string   | Cevabın alınacağı dil bilgisi (default: TR)   | Hayır      |
+
+### Tablo 5.40. Bin Sorgulama Servisi Örnek Request
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "cardToken": "",
+    "binNumber": "979210",
+    "languageCode": "TR"
+  }
+```
+</CodeGroup>
+
+
+### Tablo 5.41. Bin Sorgulama Servisi Çıktı Parametreleri
+
+
+| Parametre Adı   | Veri Tipi              | Açıklama                                                                 | Zorunluluk |
+|-----------------|------------------------|--------------------------------------------------------------------------|------------|
+| conversationId  | string                 | Üye iş yeri benzersiz değeri                                             | Evet       |
+| isSucceeded     | boolean (true/false)   | İşlem durumu                                                             | Evet       |
+| errorCode       | string                 | Hata kodu                                                                | Evet       |
+| errorMessage    | string                 | Hata mesajı                                                              | Evet       |
+| binNumber       | string                 | İşlem yapılan karta ait BIN değeri                                       | Evet       |
+| cardBrand       | string                 | Kart markası (Undefined / JCB / UnionPay / Maestro / Amex / Visa / Troy / Master / Discover / Diners) | Evet |
+| cardNetwork     | string                 | Kart ağı (Unknown / CardFinans / MilesSmiles / World / Paraf / Maximum / Axess / AsyaCard / Advantage / Bonus / BankKartCombo) | Evet |
+| cardType        | string                 | Kart tipi (Unknown / Credit / Debit)                                     | Evet       |
+| cardSubType     | string                 | Kart seviyesi (Unknown / Classic / Business)                             | Evet       |
+| bankCode        | integer                | Kartın bankasına ait kod                                                 | Evet       |
+| bankName        | string                 | Kart bankasının adı                                                      | Evet       |
+| isVirtual       | boolean (true/false)   | Sanal kart bilgisi                                                       | Evet       |
+| extraParameters | array[object]          | Ek parametre alanı                                                       | Hayır      |
+| binRangeMax     | string                 | BIN aralığı üst limiti                                                   | Hayır      |
+| binRangeMin     | string                 | BIN aralığı alt limiti                                                   | Hayır      |
+| isDomestic      | bool                   | Yurt içi / yurt dışı kart bilgisi                                        | Hayır      |
+
+
+
+### Tablo 5.42. Bin Sorgulama Servisi Örnek Response
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "binNumber": "979210",
+    "cardBrand": "Undefined",
+    "cardNetwork": "Unknown",
+    "cardType": "Unknown",
+    "cardSubType": "Unknown",
+    "bankCode": 0,
+    "bankName": "",
+    "isVirtual": false,
+    "extraParameters": null,
+    "binRangeMax": "979210",
+    "binRangeMin": "979210",
+    "isDomestic": false,
+    "isSucceeded": false,
+    "errorCode": null,
+    "errorMessage": null,
+    "responseHeader": {
+      "conversationId": "1676398178",
+      "responseDateTime": "20251205171653296",
+      "responseCode": "PFC032",
+      "responseDescription": "Geçersiz işlem bilgisi. Lütfen daha sonra tekrar deneyiniz.",
+      "transactionId": "00000000-0000-0000-0000-000000000000",
+      "requestId": null,
+      "processingTime": 101,
+      "apiVersion": "1.0.1"
+    }
+  }
+```
+</CodeGroup>
+
+

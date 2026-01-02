@@ -1,0 +1,95 @@
+---
+title: 'İade Servisi'
+description: 'İade (return) Servisi, tamamlanan bir işlemin tam veya kısmi tutarının karta iade edilmesini sağlar.'
+---
+
+İade Servisi, gerçekleştirilen bir finansal işlemin tamamının veya belirli bir kısmının karta iade edilmesi için kullanılır. İade işlemleri, gün sonu sonrasında gerçekleştirilebilir.
+
+Aynı işlem için birden fazla iade çağrısı yapılabilir; ancak iptal edilmiş işlemler için iade yapılamaz ve toplam iade tutarı, işlem tutarını aşamaz.
+
+**İstek Tipi:** application/json 
+### Tablo 5.31. Return Servisi Girdi Parametreleri 
+
+| Parametre Adı                  | Veri Tipi | Açıklama                                         | Zorunluluk |
+|--------------------------------|----------|--------------------------------------------------|------------|
+| amount                         | string   | İade edilecek tutar                              | Evet       |
+| orderId                        | string   | Provizyon işlemi cevabında verilen sipariş numarası | Evet    |
+| languageCode                   | string   | Cevabın alınacağı dil bilgisi (default: TR)      | Hayır      |
+| paymentChannel                 | string   | Ödeme kanalı bilgisi                             | Hayır      |
+| merchantCustomerEmail          | string   | Üye iş yeri müşterisinin email bilgisi           | Hayır      |
+| merchantCustomerIdentityNumber | string   | Üye iş yeri müşterisinin kimlik bilgisi          | Hayır      |
+| merchantCustomerIp             | string   | Üye iş yeri müşterisinin IP bilgisi              | Hayır      |
+| merchantCustomerPhoneCode      | string   | Üye iş yeri müşterisinin telefon kodu bilgisi    | Hayır      |
+| merchantCustomerPhoneNumber    | string   | Üye iş yeri müşterisinin telefon no bilgisi      | Hayır      |
+| reason                         | string   | İade açıklaması (reason)                         | Hayır      |
+
+
+### Tablo 5.32. Return Servisi Örnek Request
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "amount": 5,
+    "orderId": "15123456780250195126",
+    "languageCode": "TR",
+    "paymentChannel": "PF",
+    "merchantCustomerEmail": "customer@gmail.com",
+    "merchantCustomerIdentityNumber": "20668899522",
+    "merchantCustomerIp": "123.123.12.12",
+    "merchantCustomerPhoneCode": "90",
+    "merchantCustomerPhoneNumber": "5301231234",
+    "reason": "İade nedeni test"
+  }
+```
+</CodeGroup>
+
+
+### Tablo 5.33. Return Servisi Çıktı Parametreleri 
+
+| Parametre Adı     | Veri Tipi               | Açıklama                    | Zorunluluk |
+|-------------------|-------------------------|-----------------------------|------------|
+| conversationId    | string                  | Üye iş yeri benzersiz değeri| Evet       |
+| isSucceeded       | boolean (true/false)    | İşlem durumu                | Evet       |
+| errorCode         | string                  | Hata kodu                   | Evet       |
+| errorMessage      | string                  | Hata mesajı                 | Evet       |
+| returnMessage     | string                  | Dönüş mesajı                | Evet       |
+| provisionNumber   | string                  | Provizyon kodu              | Evet       |
+| approvalStatus    | string                  | Onay durumu                 | Evet       |
+| orderId           | string                  | Sipariş bilgisi             | Evet       |
+| refundAmount      | number                  | İade işlem tutarı           | Hayır      |
+| remainingAmount   | number                  | Kalan işlem tutarı          | Hayır      |
+| paymentChannel    | string / bool            | Ödeme kanalı bilgisi        | Hayır      |
+
+ 
+
+
+### Tablo 5.34. Return Servisi Örnek Response
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "returnMessage": null,
+    "approvalStatus": "Approved",
+    "provisionNumber": "029139",
+    "orderId": null,
+    "refundAmount": 5.0,
+    "remainingAmount": 0.0,
+    "paymentChannel": "PF",
+    "isSucceeded": true,
+    "errorCode": "",
+    "errorMessage": "",
+    "responseHeader": {
+      "conversationId": "1094389093",
+      "responseDateTime": "20251205171556679",
+      "responseCode": "00",
+      "responseDescription": "Approved",
+      "transactionId": "00000000-0000-0000-0000-000000000000",
+      "requestId": "0c8fe2cd-860d-4dd5-b98a-6ef56330597e",
+      "processingTime": 3942,
+      "apiVersion": "1.0.1"
+    }
+  }
+```
+</CodeGroup>
+
+

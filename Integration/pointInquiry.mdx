@@ -1,0 +1,97 @@
+---
+title: 'Puan Sorgulama'
+description: 'Bu servis, kart üzerinde kullanılabilir puan bakiyesini sorgulamak için kullanılır.'
+---
+
+Kullanılacak karta ait harcanabilir puan bakiyesini sorgulamak için kullanılır. İşlem öncesinde kart üzerinde mevcut olan ve ödeme sırasında kullanılabilecek puan tutarının öğrenilmesini sağlar.
+
+**İstek Tipi:** application/json 
+### Tablo 5.27. PointInquiry Servisi Girdi Parametreleri
+
+| Parametre Adı                  | Veri Tipi | Açıklama                                      | Zorunluluk |
+|--------------------------------|----------|-----------------------------------------------|------------|
+| cardToken                      | string   | Oluşturulan token bilgisi                     | Evet       |
+| currency                       | string   | İşleme ait para birimi (default: TRY)         | Evet       |
+| languageCode                   | string   | Cevabın alınacağı dil bilgisi (default: TR)   | Hayır      |
+| merchantCustomerEmail          | string   | Üye iş yeri müşteri email bilgisi             | Hayır      |
+| merchantCustomerIdentityNumber | string   | Üye iş yeri müşteri kimlik bilgisi            | Hayır      |
+| merchantCustomerIp             | string   | Üye iş yeri müşteri IP bilgisi                | Hayır      |
+| merchantCustomerPhoneCode      | string   | Üye iş yeri müşteri telefon kodu bilgisi      | Hayır      |
+| merchantCustomerPhoneNumber    | string   | Üye iş yeri müşteri telefon no bilgisi        | Hayır      |
+
+
+### Tablo 5.28. PointInquiry Servisi Örnek Request
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "cardToken": "string",
+    "languageCode": "TR",
+    "currency": "TRY",
+    "merchantCustomerEmail": "customer@gmail.com",
+    "merchantCustomerIdentityNumber": "99999999999",
+    "merchantCustomerIp": "123.12.11.1",
+    "merchantCustomerPhoneCode": "+90",
+    "merchantCustomerPhoneNumber": "5305589996"
+  }
+```
+</CodeGroup>
+
+
+### Tablo 5.29. PointInquiry Servisi Çıktı Parametreleri
+
+
+| Parametre Adı           | Veri Tipi              | Açıklama                          | Zorunluluk |
+|-------------------------|------------------------|-----------------------------------|------------|
+| availablePoint          | number                 | Kullanılabilir puan               | Evet       |
+| isSucceeded             | boolean (true/false)   | İşlem durumu                      | Evet       |
+| errorCode               | string                 | Hata kodu                         | Evet       |
+| errorMessage            | string                 | Hata mesajı                       | Evet       |
+| binNumber               | string                 | Karta ait BIN bilgisi             | Evet       |
+| cardBrand               | string                 | Kart bankası bilgisi              | Hayır      |
+| cardNetwork             | string                 | Kart ağı bilgisi                  | Hayır      |
+| cardType                | string                 | Kart tipi bilgisi                 | Hayır      |
+| cardSubType             | string                 | Kartın alt tipi bilgisi           | Hayır      |
+| bankCode                | string                 | Banka kodu bilgisi                | Hayır      |
+| bankName                | string                 | Banka adı bilgisi                 | Hayır      |
+| pointValueInCurrency    | string                 | Puanın para cinsinden değeri      | Hayır      |
+| pointExpiryDate         | string                 | Puanın son geçerlilik tarihi      | Hayır      |
+| minimumPointUsage       | string                 | Minimum kullanılabilir puan       | Hayır      |
+| lastActivityDate        | date                   | Son puan hareketinin tarihi       | Hayır      |
+
+
+### Tablo 5.30. PointInquiry Servisi Örnek Response
+
+<CodeGroup dropdown>
+  ```json theme="dracula"
+  {
+    "isSucceeded": true,
+    "errorCode": "string",
+    "errorMessage": "string",
+    "responseHeader": {
+      "conversationId": "5678787878",
+      "responseDateTime": "string",
+      "responseCode": "string",
+      "responseDescription": "string",
+      "transactionId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "requestId": "string",
+      "processingTime": 0,
+      "apiVersion": "string"
+    },
+    "availablePoint": 0,
+    "binNumber": "string",
+    "cardBrand": "Undefined",
+    "cardNetwork": "Unknown",
+    "cardType": "Unknown",
+    "cardSubType": "Unknown",
+    "bankCode": 0,
+    "bankName": "string",
+    "pointValueInCurrency": 0,
+    "pointExpiryDate": "2025-12-05T13:12:02.953Z",
+    "minimumPointUsage": 0,
+    "lastActivityDate": "string"
+  }
+```
+</CodeGroup>
+
+
