@@ -69,10 +69,12 @@
                   {
                       "group": "Ek Bilgiler",
                       "pages": [
+                        "integration/access-definition",
+                        "integration/error-codes",
                         "integration/timeout-management",
-                          "integration/test-cards",
-                          "ai-tools/claude-code",
-                          "ai-tools/windsurf"
+                        "integration/test-cards",
+                        "ai-tools/claude-code",
+                        "ai-tools/windsurf"
                       ]
                   }
               ]
