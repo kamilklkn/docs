@@ -1,6 +1,7 @@
 ---
 title: "Servis Detayları"
 ---
+
 1000pay API’leri, tekrarlanan taleplerde tutarlı ve güvenli bir işlem davranışı sağlamak üzere, kimlik doğrulama ve imza üretimi merkezli bir mimariyle tasarlanmıştır. Üye işyerlerinin gerçekleştirdiği tüm API çağrıları, talebin kaynağını ve bütünlüğünü doğrulamak amacıyla belirli parametrelerin birlikte kullanılmasını gerektirir.
 
 Bu kapsamda; Public/Private Key, nonce, signature, conversationId, merchantNumber ve clientIpAddress gibi alanlar, hem güvenlik hem de izlenebilirlik açısından kritik rol oynar. Aşağıdaki bölümlerde, bu parametrelerin her biri ile 1000pay ödeme servislerinin REST tabanlı mimarisi detaylı şekilde açıklanmaktadır.
