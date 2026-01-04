@@ -2,14 +2,22 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "willow",
   "name": "1000pay",
+  "description": "1000pay API entegrasyonu için kapsamlı dokümantasyon. Ödeme sistemi, 3D Secure, kart token servisi ve daha fazlası için geliştirici rehberi.",
   "styling": {
-      "eyebrows": "breadcrumbs"
+      "eyebrows": "breadcrumbs",
+      "textAlign": "justify"
   },
   "colors": {
       "primary": "#3B82F6",
       "light": "#2563EB",
       "dark": "#1D4ED8"
-  },
+  },"errors": {
+"404": {
+  "redirect": false,
+  "title": "Sayfa Bulunamadı",
+  "description": "Aradığınız **sayfa** buraya _ulaşamadı_."
+}
+},
   "favicon": "/favicon.svg",
   "navigation": {
       "onThisPage": "Bu Sayfada",
@@ -70,10 +78,10 @@
                   {
                       "group": "Ek Bilgiler",
                       "pages": [
-                        "integration/access-definition",
-                        "integration/error-codes",
-                        "integration/timeout-management",
-                        "integration/test-cards"
+                        "Integration/access-definition",
+                        "Integration/error-codes",
+                        "Integration/timeout-management",
+                        "Integration/test-cards"
                       ]
                   }
               ]
